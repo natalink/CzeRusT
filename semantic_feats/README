@@ -1,0 +1,15 @@
+Our aim is to build a lexicon containing information on semantic
+features that can be therefore used
+for the ambiguity
+resolution. 
+Our division into semantic classes is not fine-grained at all,
+it does not go to such depth as for instance human beings classification like
+in WordNet. It rather assigns minimum semantic features, like - animated,
+abstract, concrete, interval.
+
+The method we used in our work is supervised clustering. We take
+a sample of words annotated with semantic features and on the
+basis of learned contexts from a monolingual corpus
+a programm will assign the semantic
+features to the unknown words in the dictionary.
+(more in the may_be_to_appear article)
