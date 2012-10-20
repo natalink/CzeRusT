@@ -1,0 +1,366 @@
+%% Example of a LaTeX source file for a COLING-2012 submission
+%% last updated: July 10, 2012
+%% Optional instructions for authors within the tex file are provided as comments and start with 'for authors:...'
+\documentclass[10pt,a5paper,twoside]{article}
+\usepackage{coling2012}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{url}
+\usepackage{algorithm2e}
+
+
+\title{Enhancing an automatically extracted bilingal dictionary with semantic features}
+\begin{document}
+\maketitle
+\abstractEn{  %ABSTRACT}{
+In this article we present a way to assign shallow semantic features to a 
+bilingual lexicon entries. A Czech-Russian dictionary 
+is induced automatically from a parallel corpus, filtered by an on-line dictionary.
+The purpose of our investigation is to find a scheme of how 
+semantic features can be assigned automatically to nouns 
+using pre-annotated training data.
+} 
+
+%\keywordsOL{bilingual dictionary, Slavic languages, semantic features}
+
+%\newpage
+%================================================================
+
+\section{Introduction}
+Semantic features are generally viewed as components of meaning
+that express one definite sense of a word, they are generally associated
+with the contrastive context, so they occur either with plus or minus
+sign, ex. [+human], [-time] etc. 
+There is no general set of semantic features, as researches
+use their own classification depending on their goals. The 
+number of semantic features can vary from only a few components (like
+devision of nouns into 'animated' or 'non-animated') to the very
+fine-grained meaning classification like in WordNet. Semantic features
+are therefore closely related to the ontology creating, and they
+can be also used for some minor research problems, as, for example
+resolving nominative-accusative ambiguity in Slavic languages.
+
+Bilingual dictionaries enhanced with semantic information are frequently used 
+in various NLP applications, such as machine translation, question-answering
+or sentiment analysis. Recently many tools for automatic semantic annotation have been created, like
+clustering words into semantic classes(\cite{wordnet},\cite{baroni:2009} ), 
+semantic relation assignment \cite{peirsman}.
+Our aim is to build a lexicon containing information on semantic
+features that can be therefore used for the ambiguity 
+resolution. The semantic information we want to introduce is a minimum 
+it will not cover even the majority of them. The classification
+according to semantic features is not fine-grained at all,
+it does not go to such depth as classification like
+in WordNet. It rather assigns minimum number of semantic features, like 'animated', 
+'abstract', 'concrete', 'interval' etc. We dispone a resource where Czech words and
+their Russian equivalents are annotated with a small amount of
+semantic features (16) which will serve as trainig data for machine learning.
+
+The method we used in our work is supervised clustering. We take 
+a sample of words annotated with semantic features and on the 
+basis of learned contexts from a monolingual corpus 
+a programm will assign semantic features to unknown words in the dictionary.
+
+The paper is structured as follows. Section 2 describes the lexicographical
+resources used as training and test data.  
+
+
+\section{Lexicographical Resources}
+We have combined two types of resources that were created for the same 
+purpose - Machine Translation betwenn Czech and Russian
+, though very different in nature because
+the methodology of their creation differs a lot.  Ruslan - Czech-Russian 
+transducing dictionary - was created for the Czech-to-Russian
+Rule-Based MT system within Q-system formalism which
+is nowadays a little bit obsolete. It was not that trivial to
+extract entries from the dictionary, as the format of it was not very intuitive,
+it was written for an early MT system that is not used anymore.
+The advantage of this dictionary is that it was manually created, and
+that it contains valuable morphological, syntactic and semantic information
+which we can exploit for various theoretical investigations and practical tasks.
+
+\subsection{Ruslan}
+The creation of the dictionary \cite{oliva1989parser} 
+goes back to the 80's when the Rule-Based methods
+in Machine Translation prevailed. Generally, the MT systems are constructed for
+English and some other language. The choice of Czech and Russian as
+a translation pair was partially motivated by a political situation, as
+
+ The project was abandoned in 90's when
+there was no need for the MT between Czech and Russian. There were
+several attempts to exploit the data and the parts of the system, for 
+example, in \cite{mt-recycled} authors tried to use the module
+of syntactic analysis for Czech for the Czech-English Machine Translation
+and \cite{pisa2012} extracted the morphosyntactic information for 
+valency dictionary. 
+\subsection{The dictionary entry} 
+Dictionary entries in Ruslan contain morphological,
+syntactic  and semantic information. 
+The dictionary has about 5000 entries, 1080 of which are verbs.
+Following is the example of an entry:\\
+LE2KAR3==MZ(@(*H),!,MA0111,VRAC2).\\
+LE2KAR3 - lékař - lemma, a doctor\\
+==MZ - represents part of speech(noun) and declension class.\\
+@(*H) - semantic feature 'animated'\\
+MA0111,VRAC2 - declination class of Russian lemma + lemma itself\\
+%KONZULTOVA==R(5,K,?(N(+(*H,*INS),-(*K,*A,*H),N),A(+(*A,*K),-(*H,*INS),A)
+%,/,N(+(*A,*K),-(*H,*INS),N),I(+(*H,*INS),-(*K,*A),I),/,> 
+%S(I(+(*H,*INS,*Z),S(I)))),91,KONSULTIROVAT6).
+We transformed the dictionary into a more readible plaintext format,
+both human and machine readible, so that the data can be used in
+the machine learning or as a human-readible lexicon:\\
+(*A)    dan     nalog\\
+(*C)    datování        datirovka\\
+(*H,*K,*A)      děd     ded\\
+(*A)    defekt  defekt\\
+(*H)    moucha  mucha\\
+(*N)    pátek    pjatnica\\
+There are about 8000 lexical entries in the lexicon, we take 1800 
+translation equivalents that are nouns with assigned semantic features. 
+As the resource is quite obsolete(quite often expressions that are not used in Russian
+anymore can be found) and the domain of the dictionary is restricted to old manuals
+about the mainframe machines, only 500 nouns
+can be found in the modern monolingual corpus.
+
+\subsubsection{Semantic features and how they work}
+There are 16 semantic features in Ruslan, and each word can have more than one 
+feature assigned. In our work we will use only few of them - *H(animated), *A(abstract),
+*K(concrete), *INS(institution), *INT(interval). Verbs are assigned by the arguments
+which have restriction on nouns with definite semantic prperties. In example (1)
+the subject of the verb 'to coordinate' can be 'human' or 'institution', whether
+the object should have the semantic features either 'concrete' or 'abstract'. The sign (-)
+before the set of features shows that those features are prohibited to used in this context. 
+(1)koordinovat(n(+(*h,*ins,*z,*os)),a(+(*a,*k),-(*h,*ins)),koordinirovat').
+
+Following is the example of how they can influence the disambiguation process.\\
+(2cz) Děda    nemůže   dojít do ordinace sám.\\
+lit.  Granny  couldn't go    to hospital on his own\\
+(3cz) K  této situaci   nemůže   dojít\\
+lit.  To this situation couldn't come\\
+'Such a situation could not happen'
+
+The ambiguous verb 'dojít' that has a literal sense of 'going somewhere'
+and both metaphorical meaning 'to happen' can be translated properly
+due to the semantic features assigned to its actants. In (2cz) the 
+agent has the semantic feature (*H) - animated, so the verb is translated
+in its literal meaning(in Russian 'dojti'), whereas in (3cz) the actant does not have this feature
+and it is translated as 'proizojti':\\
+meaning (1cz) DOJD==R(5,NES,?(N(+(*H,*Z,*P,*F),K(D,DO(G)))),07,DOJTI).\\
+meaning (2cz) DOJD==R(5,NES,?(K(D,N)),07,PROIZOJTI)\footnote{We should mention, that in this example 
+not only the semantics is taken into account, but also the surface realization of an argument}.\\
+
+
+\subsubsection{Semantic features - negative experience}
+As it was stated in \cite{KubonPHD2001} the semantic features did not
+served the purpose of disambiguation, sometimes they introduced mistakes
+so that translation process failed to produce a result at all. This 
+happened especially when a valency frame contained the prohibition 
+to use words with definite semantic features. 
+We will not use the prohibited features for our prposes, they will be rather "recommended" on the basis of
+statistics. 
+
+
+\section{Automatically extracted dictionary}
+As Ruslan dictionary is not so big and therefore 
+could not serve the purposes of creating an MT system within the modern formalisms,
+we decided to automatically induce a Czech-Russian dictionary
+from a parallel corporus and then to enhance it with the features from Ruslan.
+\subsection{Dictionary induction}
+Very similar work by extracting dictionary entries was done for
+%Chinese and English (cite baobao), for 
+Czech and English \cite{bojar:prokopova}, for English and Romanian \cite{tufis}.
+Combination of English and some other language is a very attractive
+pair to extract information as lots of parallel resources exist
+for such a combination.
+When we try to find parallel texts written for example in Russian and Czech
+ we can gain only a comparatively small amount of data. Whatsmore,
+parallel texts
+in Czech and Russian are often translations from English into these languages.
+
+We have used Czech-Russian corpus,  tokenized, with pairwise alignment
+\url{https://ufal.mff.cuni.cz/umc/}
+to extract aligned word pairs.
+The tool we used for word alignment process is GIZA++ \cite{och00},
+which is broadly exploited by many researches while generating
+bilingual dictionaries.
+Our Rule-Based MT system is supposed to have a morphological
+analyzer and generator, so the dictionary should include not wordforms,
+but rather lemmas. To make this we lemmatized the dictionary,
+that means substitution of wordforms by their lemmas.
+For this purpose we used Morce tagger for Czech \footnote{\url{http://ufal.mff.cuni.cz/morce/}}
+and TreeTagger\footnote{\url{http://www.ims.uni-stuttgart.de/projekte/corplex/TreeTagger/}}
+for Russian.
+GIZA++ was run on the lemmatized data described above, it
+outputted over 406 973 candidate translation word pairs, and we suspect the
+majority of them to be wrong.
+\subsection{Cleaning}
+In order to select those pairs that are most probable to be the correct
+translation pairs, we calculated the frequency of pair occurrence and
+sorted the dictionary according to those frequencies.
+Obviously the most frequent word pairs obtained automatically
+are those trustworthy than those with a low occurrence in the text.
+
+For the purpose of cleaning we made use of an on-line dictionary, checking
+stepwise how many words from our dictionary are translated similarly to those
+manually built one. This filtering resulted in a Czech-Russian
+dictionary that contains almost 20,000 translation pairs which we will 
+enhance with semantic features. 
+
+\section{Learning Semantic Features}
+In order to assign semantic features to words
+we have chosen the method of supervised clustering. Based
+on a small sample of pre-annotated words(those from Ruslan)
+the machine learns the semantic features on this data. Then those
+features are automatically assigned to the nouns from the big and 
+up-to-date lexicon. 
+
+As a statistical model for assigning semantic features we have chosen
+\textbf{Logistic Regression} analysis. It predicts the outcome on the basis of
+some features. %fixme -a few more sentences about LR
+
+\subsection{Features for the ML}
+One of the major decisions for us was choising the proper 
+features\footnote{Features for Machine Learning here are not the same as 
+semantic features that we want to identify}
+for the machine learning.
+As J. R. Firth stated "Words shall be known by the company they keep",
+ and the most obvious decision is to learn the semantic features for the new words
+from a \textbf{context} on the basis of a large monolingual corpus. This is 
+the generally used method of automatic clustering now, ex. \cite{baroni:2009},
+where semantic relations were retrieved from a context as well.
+
+The basic idea of assigning the features can be illustrated
+on the following example. The words like 'man', 'worker', 
+'programmer', 'citizen' that have a semantic feature (*H) appear
+most frequently in the context of verbs like 'run', 'think', 'speak' etc.
+Then we can select other nouns frequently used with those verbs that
+do not occur in Ruslan dictionary, but are present in the lexicon. So the 
+semantic feature 'animated' is assigned to those nouns.
+
+Due to technical reasons
+we have chosen a Russian monolingual corpus, so that the semantic features
+are assigned to a Russian word in a pair. 
+
+%In (Bieman, 2005) the semantic features of nouns were learned
+%from a context, but only adjectives were taken into account.
+%We plan to use all part of speech as a context. 
+We have made two experiments with different tasks and different training data.
+The algorithm of the first one(Exp1) is as follows. 
+A machine learning system gets a set of training data - 
+words with attached semantic features(lables) and
+it needs to attach a semantic lable to a word from an unlabled set.
+On the basis of the context from a monolingual corpus 
+(one word to the left, one word to the right) we have chosen the contexts in which 
+the labled and unlabled word occurs in tha majority of cases.
+This baseline experiment can be schematized by the following psudo-code:%fixme budeme psat pseudokod nebo obejdeme se bez toho?
+\begin{algorithm}[H]
+ \SetAlgoLined
+ \KwData{AL=annotated lemma,SF=semantic feature,C=context from corpus }
+ \KwResult{SF for lemma from unannotated lexicon(UL)}
+ initialization\;
+ \While{Ruslan}{
+  get AL, get SF\;
+ }
+ \While{Corpus}{
+  get lemma l\;
+  \eIf{lemma frequency > 20}{
+   a feature for ML is a triple C=<c-1,l,c+1>\;
+     }{
+   remove lemma from search results\;
+  }
+ }
+ classify contexts C with the Logistic Regression;
+ \While{UL}{
+ apply LR to a lemma\;
+ Write SF for LR
+ }
+ \caption{Learning semantic features}
+\end{algorithm}
+
+We have also made an additional experiment(Exp2) with another training data and
+more narrowed subtask. We have taken only one semantic feature -
+animatedness(*H) and used the large set of words that have this 
+feature\footnote{The set was induced with the help of TreeTagger for Russian} 
+and another set non-unimated nouns as training data. The algorithm for Machine
+Learning was the same as in the previous experiment. 
+
+The Table 1 summarizes the statistics of data used in the experiments.
+
+\begin{table}[!h]
+\setcounter{table}{0}
+\centering
+        \begin{tabular}{|c|c|}
+        \hline\hline
+        Data&Size\\
+        \hline\hline
+        Czech-Russian dictionary Ruslan with sem. features&XXX??? nouns\\ %FIXME-500?
+	\hline
+	Czech-Russian Bilingual Lexicon&XXXX nouns\\ %fixme -19000?
+	\hline
+	Corpus& XXX??? lemmas\\%fixme 100000?
+	\hline
+	List of animated nouns&17002\\
+	\hline
+	List of non-animated nouns&93593\\
+	\hline\hline
+        \end{tabular}
+\caption{Experiment data statistics.}
+\label{Table}
+\end{table}
+
+
+\section{Evaluation}
+
+We have evaluated how well the algorithm scored
+in predicting a semantic feature for an unkown word 
+with the help of cross-validation technique. %fixme - taky par vet o cross-validaci
+Table2 shows the results of our experiments.
+\begin{table}[!h]
+\setcounter{table}{0}
+\centering
+	\begin{tabular}{|c|c|c|c|c|}
+	\hline
+	Experiment&Training data&Precision&Recall&F-measure\\
+	\hline\hline
+	Exp1,all feats&Ru. lemma+sem.feature&PREC&REC&F\\%fixme
+	\hline
+	Exp2, feat anim&Ru. lemma animated or non-animated&PREC&REC&F\\%fixme
+	\hline
+	\end{tabular}
+\caption{Experiment data and evaluation of ML algoritm.}
+\label{Table}
+\end{table}
+
+
+The results of evaluation are not very promising. The precision of prediction
+of semantic features vary from 30\% to 40\% depending on concrete feature.
+On the other hand, when we don't use any training data, the precision is 6\%.
+The main conclusion is that little data helps, but not that much.
+
+
+\section{Conclusion and Future work}
+In this paper we tried to exploit the small lexicon with semantic information
+in order to train a model that predicted semantic features for the unknown word.
+As attributes for the Machine Learning we have chosen the contexts in which the word occur.
+The method described did not bring much fruit, as the prrecision was very low. This can
+be due to various reasons or combibnation of them - obsolete training data and data
+for attributes for Machine Learning were from the different domains, data sparsness, 
+in combination with choice of attributes or machine learning technique. 
+The results are not that bad though in a sense that for
+unsupervised methods - without any pre-annotated data - the precision was about 6 times
+worse than with at least little data. 
+
+The bilingual lexicon automatically annotated with semantic features can not serve
+the purpose that we initially created it for - resolving syntactic or semantic ambiguity.
+We are going to improve the algorithm and try other attributes for the machine learning.
+Still, it can be used in the baseline for a Rule-Based Machine Translation system or
+just as the dictionary for humans.
+ 
+
+\bibliographystyle{apa}
+
+\bibliography{colingbiblio}
+%\nocite{oliva1989parser,KubonPHD2001}
+
+%%================================================================
+\end{document}
