@@ -1,15 +1,25 @@
-Our aim is to build a lexicon containing information on semantic
-features that can be therefore used
-for the ambiguity
-resolution. 
-Our division into semantic classes is not fine-grained at all,
-it does not go to such depth as for instance human beings classification like
-in WordNet. It rather assigns minimum semantic features, like - animated,
-abstract, concrete, interval.
+Machine Translation between related languages (Czech and Russian)
+May be we will compare it with unrelated as well. En->Ru (WMT13)
 
-The method we used in our work is supervised clustering. We take
-a sample of words annotated with semantic features and on the
-basis of learned contexts from a monolingual corpus
-a programm will assign the semantic
-features to the unknown words in the dictionary.
-(more in the may_be_to_appear article)
+1.Moses: (mozna clanek)
+-pripravit subtitles, natrenovat Mosese 
+-pripravit data od S.Rosena(beletrie),natrenovat na tom Mosese
+-porovnat Moses(news), Moses(fiction) a Moses(subtitles) z hlediska lingv.
+
+pridat lingvistikou informaci: factored translation
+-morfologicke faktory - POS a lemmata
+-zkusit pridat info o valenci
+-zkusit pridat semanticke rysy z Ruslanu jako faktory(Karel Bilek rika, ze to asi nevyjde. Nesmysl.)
+-pripadne neco se syntaxi a slovosledem???(Preprocessing jako Bushra)
+-detailne hodnoceni co a jak pomohlo
+
+
+2.TectoMT (ted dava 5% BLEU)
+baseline uz je,takze jen pridavame pravidla:
+-morphosyntacticke
+-valence sloves, predlozkova valence
+-semantika???
+
+3.Porovnani TectoMT a Moses
+
+4.Vallex pro rustinu???
