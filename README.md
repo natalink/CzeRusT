@@ -1,9 +1,7 @@
 CzeRusT
 =======
 
-Czech - Russian Machine Translation
-1. plan
-2.Moses
-3.TectoMT
-
+Czech - Russian Machine Translation:
+SMT: Moses
+RBMT:TectoMT. Napsat clanky: flairs, cicling, pbml, acl.
 

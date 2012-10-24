@@ -1,15 +1,13 @@
-Our aim is to build a lexicon containing information on semantic
-features that can be therefore used
-for the ambiguity
-resolution. 
-Our division into semantic classes is not fine-grained at all,
-it does not go to such depth as for instance human beings classification like
-in WordNet. It rather assigns minimum semantic features, like - animated,
-abstract, concrete, interval.
+We want to build a model that will classify Czech/Russian
+substantives according to their semantic features.
+The model was trained on a small set of nouns from  
+a Ruslan dictionary.
+The precision of assignment of a feature to a word varies from 40% to 50%.
+The data are to sparse though, because there are only 1800 nouns in Ruslan.
 
-The method we used in our work is supervised clustering. We take
-a sample of words annotated with semantic features and on the
-basis of learned contexts from a monolingual corpus
-a programm will assign the semantic
-features to the unknown words in the dictionary.
-(more in the may_be_to_appear article)
+We will combine this method with other linguistic staff, f.y.
+try to find some prpoductive model that will generate more words
+with some definite semantic features, ex ucitel spisovatel - *H,animated, 
+specifikace, klasifikace - *Abstract
+
+And use a CNK corpus, attributes will be context and morphology?.
