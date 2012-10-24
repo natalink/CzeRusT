@@ -3,11 +3,14 @@ substantives according to their semantic features.
 The model was trained on a small set of nouns from  
 a Ruslan dictionary.
 The precision of assignment of a feature to a word varies from 40% to 50%.
-The data are to sparse though, because there are only 1800 nouns in Ruslan.
+The data are to sparse though, because there are only 2700 nouns in Ruslan.
 
-We will combine this method with other linguistic staff, f.y.
+We will combine this method with other linguistic staff, trying to add more data.
 try to find some prpoductive model that will generate more words
-with some definite semantic features, ex ucitel spisovatel - *H,animated, 
-specifikace, klasifikace - *Abstract
+with some definite semantic features, ex ucitel spisovatel, suffix (el) - *H,animated, 
+specifikace, klasifikace - *Abstract, sekunda - *Interval.
+Our assumption is that a word endling can characterize some class.
 
-And use a CNK corpus, attributes will be context and morphology?.
+
+
+We use a PDT corpus, attributes will be context.
