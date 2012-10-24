@@ -1,7 +1,31 @@
-We want to build a model that will classify Czech/Russian
-substantives according to their semantic features.
-The model was trained on a small set of nouns from  
-a Ruslan dictionary.
+Goal: We want to build a model that will tag a noun with a semantic category.
+The model is trained on a set of nouns from a Ruslan dictionary and a monolingual corpus.
+
+Data:
+monolingual corpus - PDT
+Ruslan
+
+Method:
+The model is a supervised learning algorithm trained, in which the training data are:
+1)input a word from Ruslan and a context from a monolingual corpus
+
+making/generating more data with the help of morphology
+take words from  Ruslan , 10% test data, learn the endings from a monolingual corpus
+still only 40% of ruslan nouns are in PDT 
+
+
+
+on the set of words+sem.tags from Ruslan
+
+
+
+
+
+
+
+============old==========
+
+
 The precision of assignment of a feature to a word varies from 40% to 50%.
 The data are to sparse though, because there are only 2700 nouns in Ruslan.
 
