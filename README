@@ -1,7 +1,7 @@
 Machine Translation between related languages (Czech and Russian)
-May be we will compare it with unrelated as well. En->Ru (WMT13)
+May be we will compare it with unrelated as well. En->Ru (WMT13 leden-unor 2013)
 
-1.Moses: (mozna clanek)
+1.Moses: (mozna clanek) (DL - konec roku)
 -pripravit subtitles, natrenovat Mosese 
 -pripravit data od S.Rosena(beletrie),natrenovat na tom Mosese
 -porovnat Moses(news), Moses(fiction) a Moses(subtitles) z hlediska lingv.
@@ -14,12 +14,12 @@ pridat lingvistikou informaci: factored translation
 -detailne hodnoceni co a jak pomohlo
 
 
-2.TectoMT (ted dava 5% BLEU)
+2.TectoMT (ted dava 5% BLEU) (brezen-kveten)
 baseline uz je,takze jen pridavame pravidla:
 -morphosyntacticke
 -valence sloves, predlozkova valence
 -semantika???
 
-3.Porovnani TectoMT a Moses
+3.Porovnani TectoMT a Moses (v lete)
 
-4.Vallex pro rustinu???
+4.Vallex pro rustinu??? (na podzim)
