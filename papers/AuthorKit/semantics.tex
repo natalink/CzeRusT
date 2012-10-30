@@ -29,18 +29,108 @@ is exploited in development of ontologies or various NLP applications such as
 word sense disambiguation or question-answering.
 
 In this paper we present our results in experiments with automatically asigning semantic features,
-using logistic regression models.
-
-The model is trained in a supervised manner
+using logistic regression models. The model is trained in a supervised manner
 using a small training set of nouns that have semantic categories assigned. 
 As features of machine learning \footnote{Initially, in this context of a Machine Learning the notion 'feature'
 is used, but we will use 'atribute' instead so that it does not interfere with 'semantic feature' concept}.
 we have chosen both morphological and syntactic properties of a noun.
+The work has been carries out for Czech language.
 
+Recently many tools for automatic semantic annotation have been created, like
+clustering words into semantic classes(\cite{wordnet} - for English and other languages,
+\cite{baroni:2009} - for German and Italian), semantic relation assignment \cite{peirsman}.
+
+Our classification according to semantic features is not very fine-grained,
+it does not go to such depth like that classification
+in WordNet. We work with a minimum set of semantic features, like 'animated',
+'abstract', 'concrete', 'interval' etc. 
 
 \section{Data sources}
+In order to build a model we made use of the following resources:
+\begin{itemize}
+ \item a Czech-Russian transducing dictionary where words are annotated with semantic features.
+ \item monolingual web corpus of Czech texts, lemmatized - 405600 unique lemmas
 
 \subsection{Dictionary with semantic features - Ruslan}
+The creation of the dictionary \cite{oliva1989parser}
+goes back to the 80's when the Rule-Based methods
+in Machine Translation prevailed. Generally, the MT systems are constructed for
+English and some other language. The choice of Czech and Russian as
+a translation pair was partially motivated by a political situation, as
+
+ The project was abandoned in 90's when
+there was no need for the MT between Czech and Russian. There were
+several attempts to exploit the data and the parts of the system, for
+example, in \cite{mt-recycled} authors tried to use the module
+of syntactic analysis for Czech for the Czech-English Machine Translation
+and \cite{pisa2012} extracted the morphosyntactic information for
+valency dictionary.
+\subsection{The dictionary entry}
+Dictionary entries in Ruslan contain morphological,
+syntactic and semantic information.
+The dictionary has about 5000 entries, 1080 of which are verbs.
+Following is the example of an entry:\\
+LE2KAR3==MZ(@(*H),!,MA0111,VRAC2).\\
+LE2KAR3 - lékař - lemma, a doctor\\
+==MZ - represents part of speech(noun) and declension class.\\
+@(*H) - semantic feature 'animated'\\
+MA0111,VRAC2 - declination class of Russian lemma + lemma itself\\
+%KONZULTOVA==R(5,K,?(N(+(*H,*INS),-(*K,*A,*H),N),A(+(*A,*K),-(*H,*INS),A)
+%,/,N(+(*A,*K),-(*H,*INS),N),I(+(*H,*INS),-(*K,*A),I),/,>
+%S(I(+(*H,*INS,*Z),S(I)))),91,KONSULTIROVAT6).
+We transformed the dictionary into a more readible plaintext format,
+both human and machine readible, so that the data can be used in
+the machine learning or as a human-readible lexicon:\\
+(*A) dan nalog\\
+(*C) datování datirovka\\
+(*H,*K,*A) děd ded\\
+(*A) defekt defekt\\
+(*H) moucha mucha\\
+(*N) pátek pjatnica\\
+There are about 8000 lexical entries in the lexicon, we take 1800
+translation equivalents that are nouns with assigned semantic features.
+As the resource is quite obsolete(quite often expressions that are not used in Russian
+anymore can be found) and the domain of the dictionary is restricted to old manuals
+about the mainframe machines, only 2100 nouns
+can be found in the modern monolingual corpus.
+\subsubsection{Semantic features and how they work}
+There are 16 semantic features in Ruslan, and each word can have more than one
+feature assigned. In our work we will use only few of them - *H(animated), *A(abstract),
+*K(concrete), *INS(institution), *INT(interval). Verbs are assigned by the arguments
+which have restriction on nouns with definite semantic prperties. In example (1)
+the subject of the verb 'to coordinate' can be 'human' or 'institution', whether
+the object should have the semantic features either 'concrete' or 'abstract'. The sign (-)
+before the set of features shows that those features are prohibited to used in this context.
+(1)koordinovat(n(+(*h,*ins,*z,*os)),a(+(*a,*k),-(*h,*ins)),koordinirovat').
+
+Following is the example of how they can influence the disambiguation process.\\
+(2cz) Děda nemůže dojít do ordinace sám.\\
+lit. Granny couldn't go to hospital on his own\\
+(3cz) K této situaci nemůže dojít\\
+lit. To this situation couldn't come\\
+'Such a situation could not happen'
+
+The ambiguous verb 'dojít' that has a literal sense of 'going somewhere'
+and both metaphorical meaning 'to happen' can be translated properly
+due to the semantic features assigned to its actants. In (2cz) the
+agent has the semantic feature (*H) - animated, so the verb is translated
+in its literal meaning(in Russian 'dojti'), whereas in (3cz) the actant does not have this feature
+and it is translated as 'proizojti':\\
+meaning (1cz) DOJD==R(5,NES,?(N(+(*H,*Z,*P,*F),K(D,DO(G)))),07,DOJTI).\\
+meaning (2cz) DOJD==R(5,NES,?(K(D,N)),07,PROIZOJTI)\footnote{We should mention, that in this example
+not only the semantics is taken into account, but also the surface realization of an argument}.\\
+
+
+\subsubsection{Semantic features - negative experience}
+As it was stated in \cite{KubonPHD2001} the semantic features did not
+served the purpose of disambiguation, sometimes they introduced mistakes
+so that translation process failed to produce a result at all. This
+happened especially when a valency frame contained the prohibition
+to use words with definite semantic features.
+We will not use the prohibited features for our prposes, they will be rather "recommended" on the basis of
+statistics. 
+
+
 \subsection{Monolingual corpus}
 
 
