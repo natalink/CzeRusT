@@ -6,7 +6,7 @@
 \usepackage{courier}
 \frenchspacing
 \pdfinfo{
-/Title (Retrieving information on semantic features from an old-style dictionary) %Automatic semantic feature assignment
+/Title (Retrieving information on semantic features) %Automatic semantic feature assignment
 %/Subject (AAAI Publications)
 %/Author (AAAI Press)}
 \setcounter{secnumdepth}{0}  
@@ -24,6 +24,15 @@
 
 
 \section{Introduction}
+Semantic category assignemnt or classification of words into semantic fields 
+is exploited in development of ontologies or various NLP applications such as 
+word sense disambiguation or question-answering. In this paper we present a model that predicts 
+semantic category of a word. The model is trained i na supervised manner
+using a small training set of nouns that have semantic categories assigned. 
+As features of machine learning \footnote{Initially, in this context of a Machine Learning the notion 'feature'
+is used, but we will use 'atribute' instead so that it does not interfere with 'semantic feature' concept}.
+we have chosen both morphological and syntactic properties of a noun.
+
 
 \section{Data sources}
 
