@@ -1,6 +1,3 @@
-#this script is very "quick and dirty"
-
-
 use strict;
 use warnings;
 

@@ -1,13 +1,13 @@
 clear ; close all; clc
 
 fprintf('Nacitam...\n');
-pause;
+%pause;
 %load('ex3data1.mat');
-X=load('features');
-y=load('categories');
+X=load('../ML_tables/features');
+y=load('../ML_tables/category');
 
 fprintf('Nacteno.\n');
-pause;
+%pause;
 maxx = round(size(y)(1)*9/10);
 
 rrr = randperm(size(X,1));
@@ -26,11 +26,11 @@ clear XShuff;
 clear yShuff;
 clear rrr;
 
-lambda = 0.1;
+lambda = 2;
 thetas = one(XTrain, yTrain, lambda, 50);
 
 fprintf('Program paused. Press enter to continue.\n');
-pause;
+%pause;
 
 
 
@@ -49,7 +49,7 @@ recall
 
 fprintf('\nTesting Set Accuracy: %f\n', mean(double(pred == yTest)) * 100);
 
-%pred = predictOne(thetas, XTrain);
+pred = predictOne(thetas, XTrain);
 
-%fprintf('\nTraining Set Accuracy: %f\n', mean(double(pred == yTrain)) * 100);
+fprintf('\nTraining Set Accuracy: %f\n', mean(double(pred == yTrain)) * 100);
 

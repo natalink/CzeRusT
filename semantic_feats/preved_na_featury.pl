@@ -1,12 +1,9 @@
-#this script is very "quick and dirty"
-
-
 use strict;
 use warnings;
 
 
-#gets unique members of array
 sub get_uniq {
+    #gets unique members of array
     my @w = @_;
     if (scalar @w==0) {die "OOPS"}
     my %h; @h{@w}=();
@@ -21,7 +18,7 @@ open my $slovnik, "<:utf8", "data/slovnik.features";
 
 while (my $line = <$slovnik>) {
     chomp $line;
-    my ($cats, undef, $rus) = split(/\t/, $line);
+    my ($cats, $ces, $rus) = split(/\t/, $line);
 
     $cats =~ /\*([^,\)]+)/;
     my $cat = $1;
