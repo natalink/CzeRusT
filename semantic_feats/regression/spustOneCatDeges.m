@@ -1,10 +1,6 @@
 clear ; close all; clc
 
-ar=argv();
-lambdastr = ar{1};
-lambda = str2num(lambdastr);
-categ = ar{2};
-
+lambda = 0.3;
 
 rand('seed', 5);
 
@@ -12,7 +8,7 @@ fprintf('Nacitam...\n');
 %pause;
 %load('ex3data1.mat');
 X=load('../ML_tables/features');
-y=load(strcat('../ML_tables/is', categ));
+y=load('../ML_tables/isINT');
 
 
 fprintf('Nacteno.\n');
@@ -47,28 +43,18 @@ fprintf('Program paused. Press enter to continue.\n');
 %% ================ Part 3: Predict for One-Vs-All ================
 %  After ...
 
-tolerances = [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9];
-res = [];
 
-for tolerance = tolerances
-
+tolerance=0.5;
     pred = predictOne(thetas, XTest, tolerance);
 
-   
     TP = 0.0+ sum(pred&yTest);
-    precision = TP/sum(pred);
-    recall = TP/sum(yTest);
-    if (sum(yTest)==0)
-     recall = 1;
-    endif
+    precision = TP/sum(pred)
+    recall = TP/sum(yTest)
 
 
 
-    Fscore = 2*(precision*recall)/(precision+recall);
-    res = [res Fscore]
-endfor
+    Fscore = 2*(precision*recall)/(precision+recall)
 
-save(strcat('../ML_tables/res',lambdastr), 'res');
 
 fprintf('\nTesting Set Accuracy: %f\n', mean(double(pred == yTest)) * 100);
 

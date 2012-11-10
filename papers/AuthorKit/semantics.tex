@@ -1,4 +1,4 @@
-i%File: formatting-instruction.tex
+%File: formatting-instruction.tex
 \documentclass[letterpaper]{article}
 \usepackage{aaai}
 \usepackage{times}
@@ -7,8 +7,8 @@ i%File: formatting-instruction.tex
 \frenchspacing
 \pdfinfo{
 /Title (Using maching learning for automatic semantic feature assignment) %
-%/Subject (AAAI Publications)
-%/Author (AAAI Press)}
+/Subject (AAAI Publications)
+/Author (AAAI Press)}
 \setcounter{secnumdepth}{0}  
  \begin{document}
 % The file aaai.sty is the style file for AAAI Press 
@@ -24,19 +24,83 @@ i%File: formatting-instruction.tex
 
 
 \section{Introduction}
-Semantic category assignment or classification of words into semantic fields 
-is exploited in development of ontologies or various NLP applications such as 
+
+Semantic category assignment or classification of words into semantic fields
+is exploited in development of ontologies or various NLP applications such as
 word sense disambiguation or question-answering.
 
-In this paper we present our results in experiments with automatically asigning semantic features,
-using logistic regression models.
-
-The model is trained in a supervised manner
-using a small training set of nouns that have semantic categories assigned. 
+In this paper we present our results in experiments with automatically assigning semantic features,
+using logistic regression models. The model is trained in a supervised manner
+using a small training set of nouns that are annotated with semantic categories.
 As features of machine learning \footnote{Initially, in this context of a Machine Learning the notion 'feature'
 is used, but we will use 'atribute' instead so that it does not interfere with 'semantic feature' concept}.
-we have chosen both morphological and syntactic properties of a noun.
-The work has been carries out for Czech language.
+we have chosen both morphological and syntactic(context behaviour) properties 
+of a noun as features for machine learning.
+%The work has been carried out for Czech language.
+
+Recently many tools for automatic semantic annotation have been created, like
+clustering words into semantic classes(\cite{baroni:2009} - for German and Italian), 
+semantic relation assignment \cite{peirsman}. The most well-known resource
+in the field WordNet \cite{wordnet} presents the lexicon of words
+interlinked by semantic relations and organized hierarchically into 
+semantic classes.
+%We have not used WordNet because our study
+%is merely of an experimental nature, we plan to use wordnet a resourse for an evaluation.
+
+Our classification according to semantic features is not very fine-grained,
+it does not go to such depth like that classification
+in WordNet. We work with a minimum set of semantic features (totally 16)
+ initially used in the lexicon:
+*H - animated, *A - abstract, *C - activity, *R - result , 
+*K - concrete, *V - property, *Z - machinery, *INT - 'interval',
+ *INS - institution etc. Those categories were selected as 
+relevant for a concrete NLP task - an automatical machine translation(MT)
+system between Czech and Russian, but they may be also used in other
+NLP applications.  
+
+The paper also raises the question of recycling the obsolete language resources and adopting them for the
+needs of modern computational linguistics. Another problem is adressed here is whether or not it is 
+sufficient to use small  training data in Machine Learning.
+
+The paper is structured as follows. In the first part
+we briefly introduce the notion of semantic categories and
+show the areas they might be useful for. 
+First in Section 2 we describe 
+language resources used in the machine learning algorithm. Section 3 
+presents the learning algorithms themselves and is divided into two main
+parts: experiments with morphological endings as features
+and those with features based on context. The evaluation and results are
+provided in Section 4. Finally, we conclude in Section 5.
+
+\section{Semantic features - motivation}
+Semantic features are generally viewed as components of meaning
+that express one definite sense of a word, they are generally associated
+with the contrastive context, so they occur either with plus or minus
+sign, ex. [+human], [-time] etc.
+There is no general set of semantic features, as researches
+use their own classification depending on their goals. The
+number of semantic features can vary from only a few components (like
+devision of nouns into 'animated' or 'non-animated') to the very
+fine-grained meaning classification like in WordNet. Semantic features
+are therefore closely related to the ontology creating.
+They can be also used for some minor research problems, as, for example
+resolving nominative-accusative ambiguity in Slavic languages.
+In \cite{principled_disam} the authors show the way to disambiguate adjectives
+with the help of semantic categories of nouns they modify. For example, 
+this discriminates several senses of the  adjective \textit{short}
+: applied to those nouns with the sem. feature [+human] versus in combination
+with a [+interval] noun. The phrase \textit{short girl} is translated
+into Czech as \textit{mala holka}, whereas \textit{short day} is \textit{kratky den}.
+This can be also applied to disambiguation of senses of verbs: 
+(1) \textit{The dog \bf{runs} after the owner}. - [+human] feature of a subject\\
+(2) \textit{The program \bf{runs} on Linux}. -[+computer] feature of a subject \\
+The latter verb is translated into Czech with the same verb \it{běžet}
+for both senses, so this concrete ambiguity is not relevant for
+the translation between English and Czech. On the other hand, in Russian
+it might cause a mistake: while the verb in (1) will be still \it{běžat'} in Russian,
+the metaphorical meaning in (2) is expressed by another verb - \it{rabotat'} - to work.
+More examples on how the semantic features work will be presented in the next section
+after the lexicon description.
 
 Recently many tools for automatic semantic annotation have been created, like
 clustering words into semantic classes(\cite{wordnet} - for English and other languages,
@@ -52,6 +116,18 @@ In order to build a model we made use of the following resources:
 \begin{itemize}
  \item a Czech-Russian transducing dictionary where words are annotated with semantic features.
  \item monolingual web corpus of Czech texts, lemmatized - 405600 unique lemmas
+
+In order to build a model we made use of the following resources:
+\begin{itemize}
+ \item a Czech-Russian transducing dictionary where words are annotated with semantic features.
+ \item monolingual web corpus of Czech texts, lemmatized - 405600 unique lemmas
+\end{itemize}
+%First, we will describe the resource that contains information on semantic 
+%features - a Czech-Russian dictionary Ruslan.
+Semantic data from the first lexicon were used as a small training set,
+we also put aside 10\% of it as the test data. 
+The machine learning algorithms were applied and both tested on the 
+second resource - a monolingual corpus of Czech texts downloaded from the web.
 
 \subsection{Dictionary with semantic features - Ruslan}
 The creation of the dictionary \cite{oliva1989parser}
@@ -95,11 +171,11 @@ As the resource is quite obsolete(quite often expressions that are not used in R
 anymore can be found) and the domain of the dictionary is restricted to old manuals
 about the mainframe machines, only 2100 nouns
 can be found in the modern monolingual corpus.
-\subsubsection{Semantic features and how they work}
+\subsubsection{Semantic features and how they work in Ruslan}
 There are 16 semantic features in Ruslan, and each word can have more than one
 feature assigned. In our work we will use only few of them - *H(animated), *A(abstract),
 *K(concrete), *INS(institution), *INT(interval). Verbs are assigned by the arguments
-which have restriction on nouns with definite semantic prperties. In example (1)
+which have restriction on nouns with definite semantic properties. In example (1)
 the subject of the verb 'to coordinate' can be 'human' or 'institution', whether
 the object should have the semantic features either 'concrete' or 'abstract'. The sign (-)
 before the set of features shows that those features are prohibited to used in this context.
@@ -130,28 +206,106 @@ so that translation process failed to produce a result at all. This
 happened especially when a valency frame contained the prohibition
 to use words with definite semantic features.
 We will not use the prohibited features for our prposes, they will be rather "recommended" on the basis of
-statistics. 
+statistics.
 
 
 \subsection{Monolingual corpus}
-
+%PDT and Webcol 
 
 \section{Machine Learning}
 \input{machlearning}
-This problem can be viewed as a feature assignment task or a 
-classification task. %(this was a hint from Martin Holub)
-When we assign a semntic feature to a noun, this produces a classification
-of nouns into semantic fields.
 
-
-\subsection{Logistic Regression}
-
-\subsection{Experiment 1 - context}
-
-\subsection{Experiment 2 - morphological characteristics of words}
 
 \section{Evaluation}
 
+\begin{table}
+\caption{Evaluation of ML algorithm wrt different semantic categories}
+\begin{center}
+\begin{tabular}{ccccccc}\hline
+Sem.category &\multicolumn{3}{|c|}{Context} & \multicolumn{3}{|c|}{Morphology}\\
+\hline
+             & Precision & Recall &F-score                    & Precision& Recall & F\\
+\hline
+H animated &&& &&&\\
+A abstract &&& &&&\\
+C activity &&& &&&\\
+D action  &&& &&&\\
+R result &&& &&&\\
+K concrete &&& &&&\\
+M measure/unit &&& &&&\\
+N instrument &&& &&&\\
+V property &&& &&&\\
+INT interval &&& &&&\\
+INS institution &&& &&&\\
+P program &&& &&&\\
+F function &&& &&&\\
+Z machinery &&& &&&\\
+
+\hline\hline
+%Total &&&\\
+\end{tabular}
+\end{center}
+\end{table}
+
+
+\subsection{Suffixes and a semantic category}
+%It is a known fact, that
+%In (...) it was stated, that the form of a word can to some extent
+%signalyze the semantic class of it. For example, 'ee' - [+human, profession]
+Below are the examples of the endings and the respective endings that
+can indicate them according to our experiments.
+Because of the experiment setup it is rather tricky to trust high precision
+score. The latter when it is 1 or approaching it indicates that the 
+
+H animated &&& &&&\\
+A abstract : \textit{ivost, ekce, arování, íra, ita, nictví}
+%ivost   A       0.333333333333333       0.000220983376023304
+%ekce    A       0.469026548672566       0.000532369042237959
+%arování A       0.0454545454545455      2.00893978203003e-05
+%íra     A       0.929787234042553       0.0043895334237356
+%tence   A       0.958990536277603       0.0030535884686856
+%ikace   A       0.667664670658683       0.0022399678569634
+%ola     A       0.988584474885845       0.0043493546280950
+%ita     A       0.550518134715026       0.00426899703681382
+%nictví  A       0.295081967213115       0.000542413741148109
+%
+
+C activity &&& &&&\\
+D action  &&& &&&\\
+R result &&& &&&\\
+K concrete &&& &&&\\
+M measure/unit &&& &&&\\
+N instrument &&& &&&\\
+V property &&& &&&\\
+INT interval &&& &&&\\
+INS institution &&& &&&\\
+P program &&& &&&\\
+F function &&& &&&\\
+Z machinery &&& &&&\\
+
+
 \section{Conclusion}
+In this paper we described machine learning algorithms
+created to guess the semantic category of a noun based on the following features:\\
+1.Context surroundings of a word\\
+2.Morphological characteristics of a word\\
+We have shown, that for this concrete task the context properties of a word
+does not appear to be promising at least in such a simple manner we 
+used(regarding context as a word after and a word before) .
+Probably, more non-trivial context features should be taken into account 
+- such as ex. part-of-speech tag.
+On the other hand, such simple method as guessing semantic features on the
+basis of the surface form of the word brought more favourable %positive?promising?
+results in terms of precision. It was also an interesting observation, that 
+adding context features to that morphological to hte machine learning
+negatively influnced the overall quality.
+
+The possible future directions of our work will lie both in the field of
+optimising features for the Machine Learning algorithm as well as 
+adapting WordNet data for our task.
+the 
+
+\bibliographystyle{aaai} \bibliography{biblio}
+
 
 \end{document}

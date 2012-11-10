@@ -1,0 +1,40 @@
+We realized that the task of semantic category assignment can easily be written as a task of classication, using supervised machine learning algorithms.
+
+Generally, in supervised machine learning, we have a set of training data with defined categories and we want to build an algorithm, which will generalize from this training data and return a category for any yet unseen data.
+
+More specifically, in most of the algorithms, the training data can be broken into \textit{examples}, and each of the examples can be described as a set of \textit{features} and a given \textit{category}.
+
+With our data, we can take the words from the lexicon as training examples and their linguistic categories as categories in machine learning.\footnote{This naming confusion is unfortunate, but it is, we think, unavoidable with mixing machine learning and linguistic semantics.} 
+
+For this approach, we have to solve several problems.
+
+First, in our data, every word in lexicon has more possible semantic categories. Second, in the lexicon alone, we don't see any features for the words.
+
+We solved the first problem by learning a different classifier for every semantic category, where we take the machine learning function as purely binary for every classifier. The machine learning category is 1 when at least one of the semantic categories is a given semantic category, and 0 if none is. For every classifier we use a logistic regression (a discriminative model of machine translation).
+
+The second problem - the machine learning features - are described in the next section.
+
+\subsection{Logistic regression classifier}
+(The logistic regression models used are heavily inspired by the Andrew Ng course on Coursera.org Machine Learning MOOC.)
+
+Let's suppose that the feature vector is called $y$ and the category, that we want to predict, is called $x$.
+
+In binary logistic regression model with one cathegory, the classifier learns a vector $\theta$, which is as long as the input feature vector. The vector $\theta$ is then multiplied with the feature vectore $y$, which gives us value $?$. Based on ???, we decide to which category is the given vector classified.
+
+We learn the ???? $?$ using so-called ,,hill climbing'' - for every value $\theta$ we learn the ???? and we try to minimalize it by using ???. There is guaranteed that ????.
+
+\subsection{Features}
+\subsubsection{Morphofeatures}
+The first feature type we tried were purely morphological features.
+
+We took the beginning of the words - the first letter, the first two letters, three letters and four letters; similarly with the ending. Since endings bear strong semanting meanings in Czech language, we suspected their influence will be high.
+
+Of course, this causes the feature space to explode, which is not wanted; we therefore use just those features, that are seen with at least 1/?? of training data.
+
+\subsubsection{Context features}
+Another set of features, that we tried to use, were the word contexts.
+
+For those, we used a separate monolingual corpus, that is described in (...). For every word, we look at all its preceding and following words in the corpus.
+
+Your faithful student,
+Twilight Sparkle
