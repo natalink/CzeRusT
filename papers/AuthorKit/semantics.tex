@@ -373,9 +373,19 @@ covers evaluation for multi-labeled machine learning, which is by itself a diffi
 We used some of the algorithms that Mulan provides, together with 10-fold cross-validation that Mulan automatically provides.
 
 \section{Machine Learning evaluation}
-Něco o micro-average, macro-average, example-based average.
+Because we use multi-labeled classification, we cannot use only precision and recall. Instead, we use so-called micro-average and macro-average of both precision and recall, and then make their mean average for micro-averaged and macro-averaged F-score.
 
-%JÁ UŽ MUSIM KONČIT, NEDOKÁŽU PSÁT DÁL, JE 6 RÁNO :(
+Micro- and macro-averaged precision and recall is defined as \todo{citace \url{http://datamin.ubbcluj.ro/wiki/index.php/Evaluation_methods_in_text_categorization}} 
+
+$$P_{\mathrm{micro}} = \frac{\sum_{i=1}^{|C|}TP_{i}}{\sum_{i=1}^{|C|}TP_{i}+FP_{i}}; \quad R_{\mathrm{micro}} = \frac{\sum_{i=1}^{|C|}TP_{i}}{\sum_{i=1}^{|C|}TP_{i}+FN_{i}}$$
+
+$$P_{\mathrm{macro}}=\frac{1}{|C|}\sum_{i=1}^{|C|}\frac{TP_{i}}{TP_{i}+FP_{i}};\quad R_{\mathrm{macro}}=\frac{1}{|C|}\sum_{i=1}^{|C|}\frac{TP_{i}}{TP_{i}+FN_{i}}$$
+
+where $TP_i$ is true positive given a category $i$. Basically, micro-averaging gives equal weights to every document, while macro-averaging gives equal weights to every category\todo{opět citace \url{http://datamin.ubbcluj.ro/wiki/index.php/Evaluation_methods_in_text_categorization}}.
+
+\section{Results}
+\subsection{Logistic regression}
+
 
 
 %\section{Evaluation}
