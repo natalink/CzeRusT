@@ -6,6 +6,7 @@
 \usepackage{helvet}
 \usepackage{courier}
 \usepackage{todonotes}
+\usepackage{url}
 \frenchspacing
 \pdfinfo{
 /Title (Experiments in maching learning for automatic semantic feature assignment) %
@@ -49,60 +50,92 @@ interlinked by semantic relations and organized hierarchically into
 semantic classes. 
 
 \subsection{Note on notation}
-Since the word ``feature'' is used both in linguistic context as a term for semantic category and in machine learning context as a term for describing any observable property of a learning example, for better clarity, we use the term ``category'' for the notion of semantic feature, while we use the word ``feature'' purely for machine learning feature.
+Since the word ``feature'' is used both in linguistic context as a term for semantic category and in 
+machine learning context as a term for describing any observable property of a learning example, for 
+better clarity, we use the term ``category'' for the notion of semantic feature, 
+while we use the word ``feature'' purely for machine learning feature.
 
 
-\section{Semantic features - motivation}
+\section{Motivation}
+\subsection{Semantic features}
 Semantic features are generally viewed as components of meaning
-that express one definite sense of a word, they are generally associated
+that express one definite sense of a word. They are generally associated
 with the contrastive context, so they occur either with plus or minus
 sign, ex. [+human], [-time] etc.
+
 There is no general set of semantic features, as researches
 use their own classification depending on their goals. The
 number of semantic features can vary from only a few components (like
 devision of nouns into 'animated' or 'non-animated') to the very
 fine-grained meaning classification like in WordNet. Semantic features
 are therefore closely related to the ontology creating.
+
 They can be also used for some minor research problems, as, for example
 resolving nominative-accusative ambiguity in Slavic languages.
 In \cite{principled_disam} the authors show the way to disambiguate adjectives
-with the help of semantic categories of nouns they modify. For example, 
+with the help of semantic categories of nouns they modify. 
+
+For example, 
 this discriminates several senses of the  adjective \textit{short}
 : applied to those nouns with the sem. feature [+human] versus in combination
 with a [+interval] noun. The phrase \textit{short girl} is translated
 into Czech as \textit{mala holka}, whereas \textit{short day} is \textit{kratky den}.
-This can be also applied to disambiguation of senses of verbs: 
-(1) \textit{The dog \bf{runs} after the owner}. - [+human] feature of a subject\\
-(2) \textit{The program \bf{runs} on Linux}. -[+computer] feature of a subject \\
-The latter verb is translated into Czech with the same verb \it{běžet}
+
+This can be also applied to disambiguation of senses of verbs:\\ 
+(1)\textit{The dog runs after the owner.} - [+human] feature of a subject\\
+(2) \textit{The program runs on Linux.} -[+computer] feature of a subject \\
+The latter verb is translated into Czech with the same verb \textit{běžet}
 for both senses, so this concrete ambiguity is not relevant for
 the translation between English and Czech. On the other hand, in Russian
-it might cause a mistake: while the verb in (1) will be still \it{běžat'} in Russian,
-the metaphorical meaning in (2) is expressed by another verb - \it{rabotat'} - to work.
+it might cause a mistake: while the verb in (1) will be still \textit{běžat'} in Russian,
+the metaphorical meaning in (2) is expressed by another verb - \textit{rabotat'} - to work.
 More examples on how the semantic features work will be presented in the next section
 after the lexicon description.
 
+\subsection{Classification}
+We realized that the task of semantic category assignment can easily be written as a task of classication, using supervised machine learning algorithms.
+
+Generally, in supervised machine learning, we have a set of training data with defined categories and we want to build an algorithm, which will generalize from this training data and return a category for any yet unseen data.
+
+More specifically, in most of the algorithms, the training data can be broken into \textit{examples}, and each of the examples can be described as a set of \textit{features} and a given \textit{category}. The machine learning algorithm is usually a model with variable parameters, which are then learned from the training data.
+
+
+With our data, we can take the words from the lexicon as training examples and their linguistic categories as categories in machine learning.
+
+
+
 \section{Sources}
 \subsection{Semantic categories}
-For the machine learning, we first needed a training set, annotated with semantic categories. We decided to use the training set from the RUSLAN project.
+For the machine learning, we first needed a training set, annotated with semantic categories. 
+We decided to use the training set from the RUSLAN project.
 
 
-RUSLAN was a project for automatic, rule-based translation from Czech to Russian. Its creation \cite{oliva1989parser} goes back to the 80's when the Rule-Based methods in Machine Translation prevailed.  The project was abandoned in 90's when
+RUSLAN was a project for automatic, rule-based translation from Czech to Russian. 
+Its creation \cite{oliva1989parser} goes back to the 80's when the Rule-Based 
+methods in Machine Translation prevailed.  The project was abandoned in 90's when
 there was no need for the MT between Czech and Russian. There were
 several attempts to exploit the data and the parts of the system, for
 example, in \cite{mt-recycled} authors tried to use the module
 of syntactic analysis for Czech for the Czech-English Machine Translation
-and \cite{pisa2012} extracted the morphosyntactic information for
+and \cite{pisa2010} extracted the morphosyntactic information for
 valency dictionary.
 
-One of the parts of the system \todo{really?} was a dictionary with added semantic information for the rule-based translation. We ignore the Russian version of the dictionary and use purely the Czech side. We extracted the semantic categories from the dictionary. 
+%One of the parts of the system \todo{really?} was a dictionary with added 
+The core of the MT system RUSLAN was a dictionary with rich linguistic annotation.
+for the rule-based translation. We ignore the Russian 
+part of the dictionary and use purely the Czech side. We extracted the 
+semantic categories from the dictionary. 
 
-Before we describe the data further, what is needed to be said about the lexicon is that the words are from a very special domain - the aim of the translation and, therefore, the domain of the lexicon are mainframe computer manuals. That alone caused us bigger problems than we anticipated.
+Before we describe the data further, what is needed to be said about the lexicon is 
+that the words are from a very special domain - the aim of the translation 
+and, therefore, the domain of the lexicon are mainframe computer manuals. 
+That alone caused us bigger problems than we anticipated.
 
 \subsubsection{Mining data from RUSLAN dictionary}
 
 Dictionary entries in Ruslan contain morphological,
-syntactic and semantic information. The dictionary contains about 5000 entries, 1080 of which are verbs.
+syntactic and semantic information. The dictionary contains about 8,000 entries, 2,783 of which are nouns
+with assigned semantic categories.
 
 Following is the example of an entry:
 
@@ -111,18 +144,23 @@ LE2KAR3==MZ(@(*H),!,MA0111,VRAC2).
 \end{verbatim}
 
 \begin{itemize}
-\item \texttt{LE2KAR3} represents the Czech lemma \emph{lékař}; the diacritics is encoded using numbers, since in the 80's, the computers didn't have the encoding options as we have today.
+\item \texttt{LE2KAR3} represents the Czech lemma \emph{lékař}; th
+e diacritics is encoded using numbers, since in the 80's, the computers didn't have the encoding options as we have today.
 \item \texttt{==MZ} represents part of speech(noun) and declension class.
 \item \texttt{@(*H)} represents the semantic category `animated'.
-\item \texttt{MA0111,VRAC2} represents the declination class of Russian lemma + lemma itself - again, Russian alphabet couldn't be used, so the word is encoded into basic ASCII
+\item \texttt{MA0111,VRAC2} represents the declination class of Russian lemma + lemma itself - 
+again, Russian alphabet couldn't be used, so the word is encoded into basic ASCII
 \end{itemize}
 
-From this format we extract the Czech side of the dictionary together with the semantic categories. When we took the categories without ``sanity checking'' and filtering out the possible mistakes, we end up with 2783 words and 29 categories; however, some of these appear only with one or two words. When we filter out those categories, that don't appear with at least 10 words, we end up with those categories:
+From this format we extract the Czech side of the dictionary together with the semantic categories. 
+When we took the categories without ``sanity checking'' and filtering out the possible mistakes, 
+we end up with 2,783 words and 29 categories; however, some of these appear only with one or two words. 
+When we filter out those categories, that don't appear with at least 10 words, we end up with those categories:
 
+\begin{table}
 \begin{tabular}{|l|l|l|}
- 
-\hline
-\textbf{Cat.} &  \textbf{Count} & \textbf{Meaning}\\
+ \hline
+\textbf{Shortcut} &  \textbf{Count} & \textbf{Category}\\
 A & 941 & abstract \\ \hline
 C & 835 & activity \\ \hline
 R & 728 & result \\ \hline
@@ -130,46 +168,50 @@ K & 712 & concrete \\ \hline
 V & 205 & property \\ \hline
 H & 165 & animated \\ \hline
 Z & 101 & machinery \\ \hline
-M & 64 & ????? \\ \hline
-P & 56 & ????? \\ \hline
-N & 44 & ????? \\ \hline
-F & 41 & ????? \\ \hline
-D & 32 & ????? \\ \hline
+M & 64 & measure\\ \hline
+P & 56 & program \\ \hline
+N & 44 & instrument \\ \hline
+F & 41 & function \\ \hline
+D & 32 & action \\ \hline
 INS & 23 & institution \\ \hline
 INT & 20 & interval \\ 
 \hline
+\caption{Semantic categories in training data}
 \end{tabular}
+\end{table}
 
 As you can see, the sum is bigger than the number of words; on average, each words has 1.4 categories.
 
 
-\subsubsection{Semantic features and how they work}
-\todo{Následující dvě kapitoly vůbec nechápu. Věřím ti, že jsou OK. Karel}There are 16 semantic features in Ruslan, and each word can have more than one
+\subsubsection{Semantic features and their role in Ruslan}
+%\todo{Následující dvě kapitoly vůbec nechápu. Věřím ti, že jsou OK. Karel}There are 
+There are 29 semantic features in Ruslan, and each word can have more than one
 feature assigned. In our work we will use only few of them - *H(animated), *A(abstract),
-*K(concrete), *INS(institution), *INT(interval). Verbs are assigned by the arguments
-which have restriction on nouns with definite semantic prperties. In example (1)
-the subject of the verb 'to coordinate' can be 'human' or 'institution', whether
-the object should have the semantic features either 'concrete' or 'abstract'. The sign (-)
+*K(concrete), *INS(institution), *INT(interval) etc. present in the above table.
+The semantic categories were introduced mainly for disambiguation of verbs.
+Verbs are assigned by the arguments which have restriction on nouns with definite semantic prperties. In example (3)
+the subject of the verb 'to coordinate' can be [+human] or [+institution], whereas
+the object should have the semantic features either [+concrete] or [+abstract]. The sign (-)
 before the set of features shows that those features are prohibited to used in this context.
-(1)koordinovat(n(+(*h,*ins,*z,*os)),a(+(*a,*k),-(*h,*ins)),koordinirovat').
+(3)koordinovat(n(+(*h,*ins,*z,*os)),a(+(*a,*k),-(*h,*ins)),koordinirovat').
 
-Following is the example of how they can influence the disambiguation process.\\
-(2cz) Děda nemůže dojít do ordinace sám.\\
+We will show now on a rather frequent verb 'to come to' \footnote{The more frequent is the verb the more likely it is ambiguous} 
+how semantic information can influence the disambiguation process.\\
+The ambiguous verb \textit{dojít}that has a literal sense of \textit{going somewhere}
+and both metaphorical meaning \textit{to happen} can be translated properly
+due to the semantic features assigned to its actants. In (4cz) the
+agent has the semantic feature (*H) - animated, so the verb is translated
+in its literal meaning (in Russian 'dojti'), whereas in (4cz) the actant does not have this feature
+and it is translated as 'proizojti':\\
+(4cz) DOJDE +(*H,*Z,*P,*F),K(D,DO(G)))),DOJTI):\\
+Děda nemůže dojít do ordinace sám.\\
 lit. Granny couldn't go to hospital on his own\\
-(3cz) K této situaci nemůže dojít\\
+
+(5cz) DOJDE (K(D(*C,*A),N)),PROIZOJTI)\footnote{We should mention, that in this example
+not only the semantics is taken into account, but also the surface realization of an argument}.\\
+K této situaci nemůže dojít\\
 lit. To this situation couldn't come\\
 'Such a situation could not happen'
-
-The ambiguous verb 'dojít' that has a literal sense of 'going somewhere'
-and both metaphorical meaning 'to happen' can be translated properly
-due to the semantic features assigned to its actants. In (2cz) the
-agent has the semantic feature (*H) - animated, so the verb is translated
-in its literal meaning(in Russian 'dojti'), whereas in (3cz) the actant does not have this feature
-and it is translated as 'proizojti':\\
-meaning (1cz) DOJD==R(5,NES,?(N(+(*H,*Z,*P,*F),K(D,DO(G)))),07,DOJTI).\\
-meaning (2cz) DOJD==R(5,NES,?(K(D,N)),07,PROIZOJTI)\footnote{We should mention, that in this example
-not only the semantics is taken into account, but also the surface realization of an argument}.\\
-
 
 \subsubsection{Semantic features - negative experience}
 As it was stated in \cite{KubonPHD2001} the semantic features did not
@@ -177,7 +219,8 @@ served the purpose of disambiguation, sometimes they introduced mistakes
 so that translation process failed to produce a result at all. This
 happened especially when a valency frame contained the prohibition
 to use words with definite semantic features.
-We will not use the prohibited features for our prposes, they will be rather "recommended" on the basis of
+
+\todo{????? nerozumim}We will not use the prohibited features for our prposes, they will be rather "recommended" on the basis of
 statistics.
 
 
@@ -186,46 +229,81 @@ As one of our features, we decided to use the context informations, taken from a
 
 However, as indicated in the previous section, we got into problems because of the strange lexicon domain.
 \subsubsection{PDT}
-PDT is \todo{finish}(bla bla bla).
+PDT - Prague Dependency Treebank \url{http://ufal.mff.cuni.cz/pdt2.0/} - is a collection of Czech texts annotated on three
+levels - morphological, analytical and tectogrammatical.   
+PDT contains 115,844 sentences from newspapers and journals.
 
-We expected most the words to appear at least once in the 115,844 sentences of 1,957,247 tokens. However, out of the 2,783 words, 813 don't appear at all and 162 appear exactly once. 1,408 words appear less then 10 times.
+We expected most the words to appear at least once in the 115,844 sentences of 1,957,247 tokens. 
+However, out of the 2,783 words, 813 don't appear at all and 162 appear exactly once. 
+1,408 words appear less then 10 times.
 
-What this means that if we take only context in PDT as a ML feature, in almost any test set about half of the words won't even be in the monolingual corpus. That would cause empty feature vectors for about half of the examples in the test set, which would cause half of the examples to be misaligned completely.
+What this means that if we take only context in PDT as a ML feature, in almost 
+any test set about half of the words won't even be in the monolingual corpus. 
+That would cause empty feature vectors for about half of the examples in the test 
+set, which would cause half of the examples to be misaligned completely.
 
 For that reason, we decided to try a bigger corpus.
 
 \subsubsection{WebColl}
 
-WebColl is \todo{???}(GOD KNOWS FROM WHAT AND WHERE).
+WebColl\cite{webcoll} is a corpus of texts in Czech crawled from the Czech web, cleaned and annotated  with a POS tagger and lemmatized.
 
-WebColl consists of 7,148,630 sentences, which together have 114,867,064 tokens. It is \todo{???je to tak???}modelled after Czech National Corpus.
+WebColl consists of 7,148,630 sentences, which together have 114,867,064 tokens. 
 
-This data covers our lexicon a bit better. Out of the 2,783 words, 412 don't appear at all, 40 appear exactly once and 611 words appear less than 10 times. We have a monolingual corpus approximately 100 - times bigger, but we removed only about a half of the unseen words.
+This data covers our lexicon a bit better. Out of the 2,783 words, 412 don't appear at all, 
+40 appear exactly once and 611 words appear less than 10 times. We have a monolingual 
+corpus approximately 100 - times bigger, but we removed only about a half of the unseen words.
 
-We decided, after manually reviewing the words, that those words are very domain specific (words such as ``\emph{rebasing}'', ``\emph{subroutine}'', ``\emph{self-relocability}'' and so on) and they probably won't see the context no matter how big corpus we take. Also, some of those were genuine mistakes and some of those were caused by different lemmatization in RUSLAN and WebColl.
+We decided, after manually reviewing the words, that those words are very domain specific 
+(words such as ``\emph{rebasing}'', ``\emph{subroutine}'', ``\emph{self-relocability}'' and so on) 
+and they probably won't see the context no matter how big corpus we take. 
+Also, some of those were genuine mistakes and some of those were caused by different lemmatization in RUSLAN and WebColl.
 
 
-
-\todo{Sorry že je to místy dost hrozný, psal jsem to v nevyspání, ale chci to aspoň nahrubo dodělat}
 \section{Machine Learning features}
 \subsection{Context}
-Our first idea (and the whole reason of finding a mono-lingual corpus in the first place) was to look at the context in which the words appear and try to somehow convert it to machine learning features.
+One of the major decisions for us was chosing the proper 
+features for the machine learning.
 
-We tried to count the words, appearing on the psition 1 and 2 words left and right of the words, and use the counts as a feature type.
+As J. R. Firth stated ``Words shall be known by the company they keep'',
+and our first idea (and the whole reason of finding a mono-lingual corpus in the first place) 
+was to look at the context in which the words appear and try to convert it to machine learning features.
 
-Let us describe it in more detail for, for example, position 1 left. For every word in the lexicon, we look at all the words, appearing left from them. If $n$ such words appear, we will then have $n$ separate features for our words, where the value of the feature would be the word count. The machine learning model is, then, learned on these features; if we later wanted to assign value to another unseen word, we would then have to go through the entire corpus, count the counts for all the features (which would basically mean to count all the words on the left and then doing an intersection of the counted words and the words from the features) and then entering the counts as a feature vector to the machine learning model.
+This is  the generally used method of automatic clustering now, ex. \cite{baroni:2009},
+where semantic relations were retrieved from a context as well. 
+In \cite{biemann05} the semantic features of nouns were learned
+from a context, but only adjectives were taken into account.
+We plan to use all part of speech as a context. 
 
-This naive approach have several drawbacks. Most importantly, our number of features explodes, while the counts are very unevenly distributed.
+We tried to count the words, appearing on the position 1 and 2 words left and right from the words, and use the counts as a feature type.
+
+Let us describe it in more detail for, for example, \todo{To je divne napsane} position 1 left. For every word in the lexicon, we 
+look at all the words, appearing left from them. If $n$ such words appear, we will then have $n$ separate 
+features for our words, where the value of the feature would be the word count.
+ 
+The machine learning model is, then, trained on these features. To assign a category
+to another unseen word, we would then have to go through the entire corpus, count
+the features (which would basically mean to count all the words on the left and then doing an 
+intersection of the counted words and the words from the features) and then entering the 
+counts as a feature vector to the machine learning model.
+
+This naive approach has several drawbacks. Most importantly, our number of features explodes, while the counts themselves are very unevenly distributed.
 
 For this, we did several corrections:
 \begin{itemize}
-    \item we take the feature only when the given context word was seen in at least some fixed number of training examples $max$ - it is not going to help us too much if only few words have this word as a context (what is meant here as ``training example'' is a word from lexicon)
-%    \item we take the feature only when the given context word was \textbf{not} seen with at least $n$ training examples (we thought that )
-%tohle neni pravda, ignorovat
+    \item we take the feature only when the given context word was seen in at least some 
+fixed number of training examples $max$ - it is not going to help us too much 
+if only few words have this word as a context (what is meant here 
+as ``training example'' is a word from lexicon)
     
-    \item we normalize the numbers, so that the features are all about the same size. We originally wanted to use percents as numbers - meaning, we wouldn't have the counts as a feature, but the percent of how often is a given word a context of the training example.
+    \item we normalize the numbers, so that the features are all about 
+the same size. We originally wanted to use percents as numbers - meaning, 
+we wouldn't have the counts as a feature, but the percent of how often is a given word a context of the training example.
     
-     However, then the numbers got very small, since actually, in most of the training examples, even the top context features are in order of tenths of percents; so we use integer value percent times ten. We ignore the values when the integer value is smaller than 1 (that means, if the context is context in less than 1/1000 of cases).
+     However, then the numbers got very small, since actually, 
+in most of the training examples, even the top context features are in order of 
+tenths of percents; so we use integer value percent times ten. 
+We ignore the values when the integer value is smaller than 1 (that means, if the context is context in less than 1/1000 of cases).
      
 
 \end{itemize}
@@ -233,91 +311,115 @@ For this, we did several corrections:
 If we put $max$ as 40, the number of features is 2,008.
 
 \subsection{Morphology}
-As you will see further, experiments with context were not that successful. We then tried to experiment with a morphology, altough we initially saw it as just a ``baseline''.
+As you will see further, experiments with context were not that successful. 
+We then tried to experiment with a morphology, altough we initially saw it as just a ``baseline'' model.
 
-Because in Czech language, the ending can often determine the semantic category, we decided to try adding endings as a machine learning feature. More exactly, for $n=$ 4,3,2 and even 1, we took the last $n$ letters from a word and we then created new feature for every such ending and set is as 1.
+Because in Czech language, the ending can often determine the semantic category, 
+we decided to try adding endings as a machine learning feature. 
+More exactly, for $n=$ 4,3,2 and even 1, we took the last $n$ letters from 
+a word and we then created new feature for every such ending and set is as 1.
 
-It actually means that the feature vector for any training example will be mostly zeroes (it will be 1 only for one ending of length 4, only 1 for ending of length 3, and so on, and the rest will be 0). On the other hand, it is much easier to find such feature for a new word, because you just look at the word itself and you don't need to dig through the dictionary.
+It actually means that the feature vector for any training example will be mostly zeroes 
+(it will be 1 only for one ending of length 4, only 1 for ending of length 3, and so on, 
+and the rest will be 0). On the other hand, it is much easier to find such feature 
+for a new word, because you just look at the word itself and you don't need to dig through the dictionary.
 
-As with the previous features, the number quickly explodes. We repeat the first measure to stop feature explosion - we use only those endings as features that have at least $max$ words in the lexicon ending with these endings.
+As with the previous features, the number quickly explodes. We repeat the first measure 
+to stop feature explosion - we use only those endings as features that have at least $max$ words in the lexicon ending with these endings.
 
 \subsection{Combination}
 We also tried to combine the two approaches.
 
-Aside from just putting all the features together, we tried to include the morphology of the context. That means - we tried to add features as ``the count of the combinations of last 3 letters of the words 2 on the right'', and so on.
+Aside from just putting all the features together, we tried to include the morphology of the context. 
+That means - we tried to add features as ``the count of the combinations of last 3 letters of the words 2 on the right'', and so on.
 
-The results were disappointing, though, as will be described further. We think this is because the feature space becomes unrealistically big and the so-called \todo{reference!!} curse of dimensionality starts to take place. We, unfortunately, didn't apply very sophisticated feature selection algorithms, because \todo{já fakt nevim} we are fucking stupid and do stupid shit with unnecessary stuff. Yes I am pushing this to git.
+The results were disappointing, though, as will be described further. 
+We think this is because the feature space becomes unrealistically big and the so-called \todo{reference!!} curse of dimensionality starts to take place. Basically, we get huge matrix with more features than training examples, but most of the matrix is empty.
 
+We tried some simple algorithms for feature reduction, but we didn't get very far with those.
 
 \section{Machine Learning appropaches}
-\subsection{Linear Regression}\todo{dodělat}
-Něco o Ng a té jeho věci
+\subsection{Logistic Regression}
+For our first approach, we got heavily inspired by the Andrew Ng Machine Learning MOOC  on Coursera.org.
 
+\todo{Mělo by to tu vůbec být? Kdo chce, může si o tom zjistit něco víc.}Let's suppose that the feature vector is called $y$ and the category, that we want to predict, is called $x$.
 
-However, this model is only applicable to the case where we have \textbf{\emph{single category}} with every training case. However, in our case, we have multiple categories (also called multiple labels in literature). 
+In binary logistic regression model with \emph{one category} (meaning - the classifier just predicts 0 or 1), the classifier learns a vector $\theta$, which is as long as the input feature vector. The vector $\theta$ is then multiplied with the feature vector $y$, which gives us value $z$. We then take the value $z$ and apply the so-called sigmoid function or logistic function ($\frac{1}{1+e^{-z}}$), which then gives us a number $h_\theta(x)$. That number is chance that the example \textbf{is} in a given category. We can then output 1 if the chance is higher than some number $\gamma$ (usually 0.5).
 
-We employed a simple solution, where every category has its own classifier trained separately, returning 1 or 0, indicated belonging or not belonhing to the category. The item is then indicated as belonging to all the categories where it returned 1.
+The vector $\theta$ is learned using the so-called \emph{gradient descent}. Gradient descent defines so-called cost function for a given theta and one given example with category $y$ (1 or 0) as $-y \log(h_\theta(x))-(1-y)-\log(1-h_\theta(x))$ and average cost function over all the training examples as $J(\theta)$. We then try to find $\min_\thetaJ(\theta)$ by initializing $\theta$ as some random vector and then periodically updating $\theta:=\theta'$, where $\theta'_i=\theta_i-\alpha\frac{\part}{\part \theta_j}J(\theta)-\frac{\lambda}{m}\theta_j$ with a pre-set $\alpha$, count of training examples $m$ and so-called regularization factor $\lambda$.
 
-For every experiment, we put aside the same (at the beginning randomly selected) set for testing purposes. On the training set, we put aside a heldout set, and we train the parameters $\lambda$ and $\epsilon$ on the heldout set. These parameters vary from classifier to classifier.
+If we have several binary classifiers, Ng recommends using \emph{one-vs-all} models, with the category with the biggest chance ``winning''. However, this model is only applicable to the case where we have \textbf{\emph{single category}} with every training case. 
+In our case, though, we have multiple categories (also called multiple labels in literature). 
 
+We employed a simple solution, where every category has its own classifier trained separately, returning 1 or 0, indicated 
+belonging or not belonhing to the category. The item is then indicated as belonging to all the categories where it returned 1.
+
+For every experiment, we put aside the same (at the beginning randomly selected) set for testing purposes. 
+On the training set, we put aside a heldout set, and we train the parameters $\lambda$ and $\gamma$ on the heldout set, simply by training the model with the given $\lambda$ and $\gamma$, counting the F-score and getting the best $\lamda$ and $\gamma$ for the given classifier.
+
+These parameters vary from classifier to classifier; for a given feature set, we train 14 classifiers (one for every semantic category), together with training $\lambda$ and $\gamma$ parameters, and then we test those categories on the test set.
 
 \subsection{Mulan}
-We couldn't use WeKA machine learning framework, because the algorithms that it provides are not compatible with multi-labeled sets such as ours.
+WEKA (short for ``Waikato Environment for Knowledge Analysis'') is a general framework for machine translation, developed at the University of Waikato.
 
-However, we later found out \todo{přidat citace ze stránky Mulan projektu} that (ten týpek z řecka) have developed a system, based on WeKA, supporting multi-labeled machine learning, called Mulan.
+We couldn't use WEKA directly, because the algorithms that it provides are not compatible with multi-labeled sets such as ours. \todo{citace z FAQ}
 
-Mulan has not only implemented various machine learning algorithms that we can directly leverage, but it also already covers evaluation for multi-labeled machine learning, which is by itself a difficult task that we will talk about later.
+However, we later found out \todo{přidat citace ze stránky Mulan projektu} that (ten týpek z řecka) have developed a system, 
+based on WeKA, supporting multi-labeled machine learning, called Mulan.
 
+Mulan has not only implemented various machine learning algorithms that we can directly leverage, but it also already 
+covers evaluation for multi-labeled machine learning, which is by itself a difficult task that we will talk about later.
+
+We used some of the algorithms that Mulan provides, together with 10-fold cross-validation that Mulan automatically provides.
 
 \section{Machine Learning evaluation}
 Něco o micro-average, macro-average, example-based average.
 
-JÁ UŽ MUSIM KONČIT, NEDOKÁŽU PSÁT DÁL, JE 6 RÁNO :(
+%JÁ UŽ MUSIM KONČIT, NEDOKÁŽU PSÁT DÁL, JE 6 RÁNO :(
 
 
-\section{Evaluation}
+%\section{Evaluation}
 
-\begin{table}
-\caption{Evaluation of ML algorithm wrt different semantic categories}
-\begin{center}
-\begin{tabular}{ccccccc}\hline
-Sem.category &\multicolumn{3}{|c|}{Context} & \multicolumn{3}{|c|}{Morphology}\\
-\hline
-             & Precision & Recall &F-score                    & Precision& Recall & F\\
-\hline
-H animated &&& &&&\\
-A abstract &&& &&&\\
-C activity &&& &&&\\
-D action  &&& &&&\\
-R result &&& &&&\\
-K concrete &&& &&&\\
-M measure/unit &&& &&&\\
-N instrument &&& &&&\\
-V property &&& &&&\\
-INT interval &&& &&&\\
-INS institution &&& &&&\\
-P program &&& &&&\\
-F function &&& &&&\\
-Z machinery &&& &&&\\
+%\begin{table}
+%\caption{Evaluation of ML algorithm wrt different semantic categories}
+%\begin{center}
+%\begin{tabular}{ccccccc}\hline
+%Sem.category &\multicolumn{3}{|c|}{Context} & \multicolumn{3}{|c|}{Morphology}\\
+%\hline
+%             & Precision & Recall &F-score                    & Precision& Recall & F\\
+%\hline
+%H animated &&& &&&\\
+%A abstract &&& &&&\\
+%C activity &&& &&&\\
+%D action  &&& &&&\\
+%R result &&& &&&\\
+%K concrete &&& &&&\\
+%M measure/unit &&& &&&\\
+%N instrument &&& &&&\\
+%V property &&& &&&\\
+%INT interval &&& &&&\\
+%INS institution &&& &&&\\
+%P program &&& &&&\\
+%F function &&& &&&\\
+%Z machinery &&& &&&\\
 
-\hline\hline
+%\hline\hline
 %Total &&&\\
-\end{tabular}
-\end{center}
-\end{table}
+%\end{tabular}
+%\end{center}
+%\end{table}
 
-
-\subsection{Suffixes and a semantic category}
+%\subsection{Suffixes and a semantic category}
 %It is a known fact, that
 %In (...) it was stated, that the form of a word can to some extent
 %signalyze the semantic class of it. For example, 'ee' - [+human, profession]
-Below are the examples of the endings and the respective endings that
-can indicate them according to our experiments.
-Because of the experiment setup it is rather tricky to trust high precision
-score. The latter when it is 1 or approaching it indicates that the 
+%Below are the examples of the endings and the respective endings that
+%can indicate them according to our experiments.
+%Because of the experiment setup it is rather tricky to trust high precision
+%score. The latter when it is 1 or approaching it indicates that the 
 
-H animated &&& &&&\\
-A abstract : \textit{ivost, ekce, arování, íra, ita, nictví}
+%H animated &&& &&&\\
+%A abstract : \textit{ivost, ekce, arování, íra, ita, nictví}
 %ivost   A       0.333333333333333       0.000220983376023304
 %ekce    A       0.469026548672566       0.000532369042237959
 %arování A       0.0454545454545455      2.00893978203003e-05
@@ -329,18 +431,18 @@ A abstract : \textit{ivost, ekce, arování, íra, ita, nictví}
 %nictví  A       0.295081967213115       0.000542413741148109
 %
 
-C activity &&& &&&\\
-D action  &&& &&&\\
-R result &&& &&&\\
-K concrete &&& &&&\\
-M measure/unit &&& &&&\\
-N instrument &&& &&&\\
-V property &&& &&&\\
-INT interval &&& &&&\\
-INS institution &&& &&&\\
-P program &&& &&&\\
-F function &&& &&&\\
-Z machinery &&& &&&\\
+%C activity &&& &&&\\
+%D action  &&& &&&\\
+%R result &&& &&&\\
+%K concrete &&& &&&\\
+%M measure/unit &&& &&&\\
+%N instrument &&& &&&\\
+%V property &&& &&&\\
+%INT interval &&& &&&\\
+%INS institution &&& &&&\\
+%P program &&& &&&\\
+%F function &&& &&&\\
+%Z machinery &&& &&&\\
 
 
 \section{Conclusion}
@@ -361,8 +463,7 @@ negatively influnced the overall quality.
 
 The possible future directions of our work will lie both in the field of
 optimising features for the Machine Learning algorithm as well as 
-adapting WordNet data for our task.
-the 
+adapting WordNet as training and test data for our task.
 
 \bibliographystyle{aaai} \bibliography{biblio}
 
