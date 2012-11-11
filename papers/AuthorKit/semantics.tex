@@ -159,7 +159,7 @@ again, Russian alphabet couldn't be used, so the word is encoded into basic ASCI
 From this format we extract the Czech side of the dictionary together with the semantic categories. 
 When we took the categories without ``sanity checking'' and filtering out the possible mistakes, 
 we end up with 2,783 words and 29 categories; however, some of these appear only with one or two words. 
-When we filter out those categories, that don't appear with at least 10 words, we end up with those categories:
+When we filter out those categories, that don't appear with at least 30 words, we end up with those categories:
 
 \begin{table}
 \begin{tabular}{|l|l|l|}
@@ -177,12 +177,11 @@ P & 56 & program \\ \hline
 N & 44 & instrument \\ \hline
 F & 41 & function \\ \hline
 D & 32 & action \\ \hline
-INS & 23 & institution \\ \hline
-INT & 20 & interval \\ 
-\hline
+
 \end{tabular}
 \caption{Semantic categories in training data}
 \end{table}
+
 
 As you can see, the sum is bigger than the number of words; on average, each words has 1.4 categories.
 
@@ -340,6 +339,8 @@ for a new word, because you just look at the word itself and you don't need to d
 As with the previous features, the number quickly explodes. We repeat the first measure 
 to stop feature explosion - we use only those endings as features that have at least $max$ words in the lexicon ending with these endings.
 
+If we put $max$ as 5, the number of features is 433.
+
 \subsection{Combination}
 We also tried to combine the two approaches.
 
@@ -359,7 +360,7 @@ For our first approach, we got heavily inspired by the Andrew Ng Machine Learnin
 
 In binary logistic regression model with \emph{one category} (meaning - the classifier just predicts 0 or 1), the classifier learns a vector $\theta$, which is as long as the input feature vector. The vector $\theta$ is then multiplied with the feature vector $y$, which gives us value $z$. We then take the value $z$ and apply the so-called sigmoid function or logistic function ($\frac{1}{1+e^{-z}}$), which then gives us a number $h_\theta(x)$. That number is chance that the example \textbf{is} in a given category. We can then output 1 if the chance is higher than some number $\gamma$ (usually 0.5).
 
-The vector $\theta$ is learned using the so-called \emph{gradient descent}. Gradient descent defines so-called cost function for a given theta and one given example with category $y$ (1 or 0) as $-y \log(h_\theta(x))-(1-y)-\log(1-h_\theta(x))$ and average cost function over all the training examples as $J(\theta)$. We then try to find $\min_\thetaJ(\theta)$ by initializing $\theta$ as some random vector and then periodically updating $\theta:=\theta'$, where $\theta'_i=\theta_i-\alpha\frac{\part}{\part \theta_j}J(\theta)-\frac{\lambda}{m}\theta_j$ with a pre-set $\alpha$, count of training examples $m$ and so-called regularization factor $\lambda$.
+The vector $\theta$ is learned using the so-called \emph{gradient descent}. Gradient descent defines so-called cost function for a given theta and one given example with category $y$ (1 or 0) as $-y \log(h_\theta(x))-(1-y)-\log(1-h_\theta(x))$ and average cost function over all the training examples as $J(\theta)$. We then try to find $\min_\theta J(\theta)$ by initializing $\theta$ as some random vector and then periodically updating $\theta:=\theta'$, where $\theta'_i=\theta_i-\alpha\frac{\partial}{\partial \theta_j}J(\theta)-\frac{\lambda}{m}\theta_j$ with a pre-set $\alpha$, count of training examples $m$ and so-called regularization factor $\lambda$.
 
 If we have several binary classifiers, Ng recommends using \emph{one-vs-all} models, with the category with the biggest chance ``winning''. However, this model is only applicable to the case where we have \textbf{\emph{single category}} with every training case. 
 In our case, though, we have multiple categories (also called multiple labels in literature). 
@@ -368,7 +369,7 @@ We employed a simple solution, where every category has its own classifier train
 belonging or not belonhing to the category. The item is then indicated as belonging to all the categories where it returned 1.
 
 For every experiment, we put aside the same (at the beginning randomly selected) set for testing purposes. 
-On the training set, we put aside a heldout set, and we train the parameters $\lambda$ and $\gamma$ on the heldout set, simply by training the model with the given $\lambda$ and $\gamma$, counting the F-score and getting the best $\lamda$ and $\gamma$ for the given classifier.
+On the training set, we put aside a heldout set, and we train the parameters $\lambda$ and $\gamma$ on the heldout set, simply by training the model with the given $\lambda$ and $\gamma$, counting the F-score and getting the best $\lambda$ and $\gamma$ for the given classifier.
 
 These parameters vary from classifier to classifier; for a given feature set, we train 14 classifiers (one for every semantic category), together with training $\lambda$ and $\gamma$ parameters, and then we test those categories on the test set.
 
@@ -397,40 +398,55 @@ $$P_{\mathrm{macro}}=\frac{1}{|C|}\sum_{i=1}^{|C|}\frac{TP_{i}}{TP_{i}+FP_{i}};\
 where $TP_i$ is true positive given a category $i$. Basically, micro-averaging gives equal weights to every document, while macro-averaging gives equal weights to every category\todo{opět citace \url{http://datamin.ubbcluj.ro/wiki/index.php/Evaluation_methods_in_text_categorization}}.
 
 \section{Results}
+All the results are rounded to two significant digits.
 \subsection{Logistic regression}
+\subsubsection{Random baseline}
+
+For comparison, we began with two ``baseline'' algorithms - first was random classifier, that didn't look at the features at all; the second was logistic regression model, but learned on randomly generated 200 columns of random ``features''.
+
+% v resultech - první micro, potom macro
+\begin{tabular}{|r|r|r|r|r|r|r|}
+ \hline
+ & \textbf{Micro precision} &  \textbf{Micro recall}  &  \textbf{Micro F-Score} & \textbf{Macro precision} &  \textbf{Macro recall}  &  \textbf{Macro F-Score} \\ \hline
+Random classifier & 0.11 & 0.51 & 0.19 & 0.11 & 0.57 & 0.18 \\ \hline
+Random features & 0.30 & 0.36 & 0.32 & 0.10 & 0.14 & 0.12 \\ \hline
+\end{tabular}
+
+\subsubsection{Morphological features}
+When we take the features as described in the section \todo{reference}, we got these results:
 
 
+\begin{tabular}{|r|r|r|r|r|r|r|}
+ \hline
+ & \textbf{Micro precision} &  \textbf{Micro recall}  &  \textbf{Micro F-Score} & \textbf{Macro precision} &  \textbf{Macro recall}  &  \textbf{Macro F-Score} \\ \hline
+Morphology & 0.57 & 0.66 & 0.61 & 0.46 & 0.41 & 0.43 \\ \hline
+\end{tabular}
 
-%\subsection{Evaluation}
+If we break it into individual classifiers, we got these results
 
-%\begin{table}
-%\caption{Evaluation of ML algorithm wrt different semantic categories}
-%\begin{center}
-%\begin{tabular}{ccccccc}\hline
-%Sem.category &\multicolumn{3}{|c|}{Context} & \multicolumn{3}{|c|}{Morphology}\\
-%\hline
-%             & Precision & Recall &F-score                    & Precision& Recall & F\\
-%\hline
-%H animated &&& &&&\\
-%A abstract &&& &&&\\
-%C activity &&& &&&\\
-%D action  &&& &&&\\
-%R result &&& &&&\\
-%K concrete &&& &&&\\
-%M measure/unit &&& &&&\\
-%N instrument &&& &&&\\
-%V property &&& &&&\\
-%INT interval &&& &&&\\
-%INS institution &&& &&&\\
-%P program &&& &&&\\
-%F function &&& &&&\\
-%Z machinery &&& &&&\\
 
-%\hline\hline
-%Total &&&\\
-%\end{tabular}
-%\end{center}
-%\end{table}
+\begin{tabular}{|r|r|}
+    A & 0.57 \\ \hline
+    C & 0.75 \\ \hline
+    R & 0.66 \\ \hline
+    K & 0.58 \\ \hline
+    V & 0.78 \\ \hline
+    H & 0.57 \\ \hline
+    Z & 0.11 \\ \hline
+    M & 0.18 \\ \hline
+    P & 0 \\ \hline
+    N & 0 \\ \hline
+    F & 0 \\ \hline
+    D & 0.40 \\ \hline
+
+\end{tabular}
+
+You can see that we got a 0 F-score with several categories. This unfortunately happens, because there is very little examples for those categories in the \emph{testing} data and they all got misaligned.
+
+\subsubsection{Context}
+This will hurt.
+
+
 
 \subsection{Suffixes and a semantic category}
 %It is a known fact, that
