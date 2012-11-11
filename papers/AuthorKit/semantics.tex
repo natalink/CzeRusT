@@ -273,9 +273,10 @@ This is  the generally used method of automatic clustering now, ex. \cite{baroni
 where semantic relations were retrieved from a context as well. 
 In \cite{biemann05} the semantic features of nouns were learned
 from a context, but only adjectives were taken into account.
-We plan to use all part of speech as a context. 
+In our experiment we use all part of speech as a context. 
 
-We tried to count the words, appearing on the position 1 and 2 words left and right from the words, and use the counts as a feature type.
+We tried to count the words, appearing on the position 1 and 2 words left and 
+right from the words, and use the counts as a feature type.
 
 Let us describe it in more detail for, for example, \todo{To je divne napsane} position 1 left. For every word in the lexicon, we 
 look at all the words, appearing left from them. If $n$ such words appear, we will then have $n$ separate 
@@ -388,7 +389,7 @@ where $TP_i$ is true positive given a category $i$. Basically, micro-averaging g
 
 
 
-%\section{Evaluation}
+%\subsection{Evaluation}
 
 %\begin{table}
 %\caption{Evaluation of ML algorithm wrt different semantic categories}
@@ -421,39 +422,14 @@ where $TP_i$ is true positive given a category $i$. Basically, micro-averaging g
 
 %\subsection{Suffixes and a semantic category}
 %It is a known fact, that
-%In (...) it was stated, that the form of a word can to some extent
+%In (Kirchner?) it was stated, that the form of a word can to some extent
 %signalyze the semantic class of it. For example, 'ee' - [+human, profession]
 %Below are the examples of the endings and the respective endings that
 %can indicate them according to our experiments.
 %Because of the experiment setup it is rather tricky to trust high precision
-%score. The latter when it is 1 or approaching it indicates that the 
+%score. 
 
-%H animated &&& &&&\\
 %A abstract : \textit{ivost, ekce, arování, íra, ita, nictví}
-%ivost   A       0.333333333333333       0.000220983376023304
-%ekce    A       0.469026548672566       0.000532369042237959
-%arování A       0.0454545454545455      2.00893978203003e-05
-%íra     A       0.929787234042553       0.0043895334237356
-%tence   A       0.958990536277603       0.0030535884686856
-%ikace   A       0.667664670658683       0.0022399678569634
-%ola     A       0.988584474885845       0.0043493546280950
-%ita     A       0.550518134715026       0.00426899703681382
-%nictví  A       0.295081967213115       0.000542413741148109
-%
-
-%C activity &&& &&&\\
-%D action  &&& &&&\\
-%R result &&& &&&\\
-%K concrete &&& &&&\\
-%M measure/unit &&& &&&\\
-%N instrument &&& &&&\\
-%V property &&& &&&\\
-%INT interval &&& &&&\\
-%INS institution &&& &&&\\
-%P program &&& &&&\\
-%F function &&& &&&\\
-%Z machinery &&& &&&\\
-
 
 \section{Conclusion}
 In this paper we described machine learning algorithms

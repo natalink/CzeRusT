@@ -51,14 +51,14 @@ my %obrmatice;
 
 my @functions_m;
 
-push @functions_m, [sub {return (substr($_[0], 0, 1) , 20)},1];
-push @functions_m, [sub {return (substr($_[0], 0, 2) , 20)},1];
-push @functions_m, [sub {return (substr($_[0], 0, 3) , 20)},1];
-push @functions_m, [sub {return (substr($_[0], 0, 4) , 20)},1];
-push @functions_m, [sub {return (substr($_[0], -1) , 20)},1];
-push @functions_m, [sub {return (substr($_[0], -2) , 20)},1];
-push @functions_m, [sub {return (substr($_[0], -3) , 20)},1];
-push @functions_m, [sub {return (substr($_[0], -4) , 20)},1];
+push @functions_m, [sub {return (substr($_[0], 0, 1) , 20)},5];
+push @functions_m, [sub {return (substr($_[0], 0, 2) , 20)},5];
+push @functions_m, [sub {return (substr($_[0], 0, 3) , 20)},5];
+push @functions_m, [sub {return (substr($_[0], 0, 4) , 20)},5];
+push @functions_m, [sub {return (substr($_[0], -1) , 20)},5];
+push @functions_m, [sub {return (substr($_[0], -2) , 20)},5];
+push @functions_m, [sub {return (substr($_[0], -3) , 20)},5];
+push @functions_m, [sub {return (substr($_[0], -4) , 20)},5];
 
 sub percs {
     my $word = shift;
@@ -91,16 +91,16 @@ sub percs {
 }
 my $pre = [sub {
     return percs($_[0], "pred");
-}, 5];
+}, 40];
 my $za = [sub {
     return percs($_[0], "za");
-},5];
+},40];
 my $pre2 = [sub {
     return percs($_[0], "pred2");
-},5];
+},40];
 my $za2 = [sub {
     return percs($_[0], "pre2"); 
-},5];
+},40];
 my @functions_k;
 push @functions_k, $pre, $za;#, $pre2, $za2;
 
@@ -171,7 +171,7 @@ sub do_experiment {
 
 
 
-    #print scalar @feats;
+    say "feats je ", (scalar @feats);
     #exit;
 
     #print join(" ", @feats); #print "\n";
@@ -216,14 +216,17 @@ sub do_experiment {
 
 }
 
-#do_experiment("morhpho1_copy", @functions_m);
+#do_experiment("morhpho_znova", @functions_m);
+#do_experiment("random_features",  (@functions_random));
+
+
+
 #do_experiment("kontext", @functions_k);
 #do_experiment("komplik", @functions_komplik);
-#do_experiment("kontext_v1", @functions_k);
+do_experiment("kontext_v1", @functions_k);
 #do_experiment("komplik_v1",  ( @functions_komplik));
 
 #do_experiment("bag_v1",  (@functions_m, @functions_k, @functions_komplik));
-do_experiment("random_total",  (@functions_random));
 
 #do_experiment("bag_h2",  (@functions_m, @functions_k, @functions_komplik));
 #do_experiment("small_bag_h1",  (@functions_m, @functions_k));

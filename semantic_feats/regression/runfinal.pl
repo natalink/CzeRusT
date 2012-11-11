@@ -14,7 +14,7 @@ sub run {
     my ($cat) = @_;
 
 
-    system("octave spustOneCatAllRand.m $cat $featuretype >/dev/null 2>/dev/null");
+    system("octave spustOneCatAll.m $cat $featuretype >/dev/null 2>/dev/null");
 #    system("octave spustOneCatAll.m $cat $featuretype >/dev/null 2>/dev/null");
     #system("octave spustOneCat.m $lambda");
    
@@ -57,31 +57,45 @@ for my $category (@rozumne) {
         );
         $mythreads{$category} = $mythread;
 }
-my $sum_Fscore;
+my $sum_prec;
+my $sum_recl;
 my $total_TP;
 my $total_FP;
 my $total_FN;
+
+my %rz;
 
 for my $category (@rozumne) {
         my %res = $mythreads{$category}->join();
         $total_TP+=$res{TP};
         $total_FP+=$res{FP};
         $total_FN+=$res{FN};
+        $rz{$category}=0;
         if (($res{TP}+$res{FP})!=0) {
             my $prec = $res{TP}/($res{TP}+$res{FP});
             my $recl = $res{TP}/($res{TP}+$res{FN});
             my $fs = ($prec+$recl==0) ? 0 : 2*$prec*$recl/($prec+$recl);
-            $sum_Fscore+=$fs;
+            $rz{$category}=$fs;
+            $sum_prec+=$prec;
+            $sum_recl+=$recl;
         }
 }
 
-my $avrg_Fscore = $sum_Fscore/scalar @rozumne;
+my $avrg_prec = $sum_prec/scalar @rozumne;
+my $avrg_recl = $sum_recl/scalar @rozumne;
+my $avrg_Fscore = 2*$avrg_prec*$avrg_recl/($avrg_prec+$avrg_recl);
 my $total_prec = $total_TP/($total_TP+$total_FP);
 my $total_recl = $total_TP/($total_TP+$total_FN);
 my $total_Fscore = 2*$total_prec*$total_recl/($total_prec+$total_recl);
 
 open my $finalresf, ">", "../results/ML_final_".$featuretype;
+say $finalresf $total_prec;
+say $finalresf $total_recl;
 say $finalresf $total_Fscore;
+say $finalresf $avrg_prec;
+say $finalresf $avrg_recl;
 say $finalresf $avrg_Fscore;
 
-
+for (@rozumne) {
+    say $finalresf $_."\t".$rz{$_};
+}
