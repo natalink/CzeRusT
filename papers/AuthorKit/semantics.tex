@@ -467,15 +467,21 @@ Context with distance 2 & 0.28 & 0.62 & 0.39 & 0.23 & 0.49 & 0.32 \\ \hline
 We can see that the results are not that much better.
 
 \subsubsection{Combination - endings and beginnigs of context words}
-What we can do now is add the ``combination'' of morphology and context - that is, we can try to add endings and beginnings of the words on the left and on the right.
+What we can do now is add the ``combination'' of morphology and context - that is, 
+we can try to add endings and beginnings of the words on the left and on the right.
 
-We originally wanted to let the $min$ value 40 to keep the experiments ``consistent'', but the feature space exploded quickly. So, as a way of a very primitive feature cutting, we increased the $min$ value for the features where we take more letters.
+We originally wanted to let the $min$ value 40 to keep the experiments ``consistent'',
+but the feature space exploded quickly. So, as a way of a very primitive feature cutting,
+we increased the $min$ value for the features where we take more letters.
 
 If we take the endings and beginnings of context words with the distances 1, we have these results:
 
-(We took $min$ as 40 for the lengths 1, 80 for the length 2 and 140 for the length 3. Those numbers are quite arbitrarily chosen to keep the feature space relatively small, so the algorithms don't become too slow and the feature space too big.)
+(We took $min$ as 40 for the lengths 1, 80 for the length 2 and 140 for the length 3. 
+Those numbers are quite arbitrarily chosen to keep the feature space relatively small, 
+so the algorithms don't become too slow and the feature space too big.)
 
-\todo{najít ??}
+%\todo{najít ??}
+\begin{table}
 \begin{tabular}{|r|r|r|r|r|r|r|r|}
      & \textbf{Feature count} &  \textbf{Micro recall}  &  \textbf{Micro F-Score} & \textbf{Macro precision} &  \textbf{Macro recall}  &  \textbf{Macro F-Score} \\ \hline
 1 letter & 138 & 0.22 & 0.47 & 0.30 & 0.20 & 0.43 & 0.29 \\ \hline
@@ -483,17 +489,27 @@ If we take the endings and beginnings of context words with the distances 1, we 
 1, 2, 3 letters & ?1700? & 0.26 & 0.54 & 0.35 & 0.23 & 0.48 & 0.31 \\ \hline
 
 \end{tabular}
+\caption{Combination context and endings}
+\end{table}
+As you can see, with the added 3rd letter, we are not getting much better and 
+the feature space is growing, making our algorithm slower. We are also still worse than with the context alone.
 
-As you can see, with the added 3rd letter, we are not getting much better and the feature space is growing, making our algorithm slower. We are also still worse than with the context alone.
+%\todo{Tohle je lež, nechtělo se mi to dobíhat do konce}We had similar results with the experiments with the context 
+%of distance two.
 
-\todo{Tohle je lež, nechtělo se mi to dobíhat do konce}We had similar results with the experiments with the context of distance two.
-
-We can wonder if the reason, why the context is not working as well as we would want, is that the feature space is simply too big. However, even with reducted space, we never got better results from this ``combined'' way than from pure context; that means, that all we can get out of context is best done by looking at the context alone, not at its endings or beginnings.
+We can wonder if the reason, why the context is not working as 
+well as we would want, is that the feature space is simply too big. 
+However, even with reducted space, we never got better results from this `
+`combined'' way than from pure context; that means, that all we can get out of context 
+is best done by looking at the context alone, not at its endings or beginnings.
 
 \subsubsection{Combination - putting features together}
-We thought that with combined feature from context and morphology, the approaches would complement themselves and the results would get better, than either of them (especially morphology).
+We thought that with combined feature from context and morphology, the approaches would complement 
+themselves and the results would get better, than either of them (especially morphology).
 
-However, this didn't turn out to be true - the results are very slightly worse, than with morphology alone, further underlining the fact that the morphology of the words, at least in our case and with our technique, is more useful than context.
+However, this didn't turn out to be true - the results are very slightly worse, than with morphology alone, 
+further underlining the fact that the morphology of the words, at least in our case and with our technique, 
+is more useful than context.
 
 \begin{tabular}{|r|r|r|r|r|r|r|}
  \hline
@@ -501,15 +517,15 @@ However, this didn't turn out to be true - the results are very slightly worse, 
 Combined features & 0.54 & 0.70 & 0.61 & 0.33 & 0.42 & 0.37 \\ \hline
 \end{tabular}
 
-\todo{???}I don't know what more to write but I won't add any new tables. Blah blah blah.
+%\todo{???}I don't know what more to write but I won't add any new tables. Blah blah blah.
 
 \subsection{Suffixes and a semantic category}
 %It is a known fact, that
 %In (Kirchner?) it was stated, that 
 One of the linguistically valuable side-effects of our research can be 
-the set of endings of words that aremost likely to belong to the
+the set of endings of words that are most likely to belong to the
 respective semantic category.
-The form of a word can to some extent signalyze the semantic class of it. 
+The form of a word can to some extent signalize the semantic class of it. 
 For example, 'er' or 'ee' denote [+human, profession] semantic category of a word.
 Below are the examples of the endings that
 can indicate the semantic features of words according to our experiments.
@@ -537,7 +553,7 @@ can indicate the semantic features of words according to our experiments.
 %\caption{Sem.categories and the endings they take most frequently}
 %\end{table}
 
-%Here we faced a problem of choosing between precison and recall.
+%Here we faced a problem of choosing between precision and recall.
 %For instance, the suffix 'ík' in Czech 
 
 \section{Conclusion}
@@ -546,18 +562,18 @@ created to guess the semantic category of a noun based on the following features
 1.Context surroundings of a word\\
 2.Morphological characteristics of a word\\
 We have shown, that for this concrete task the context properties of a word
-does not appear to be promising at least in such a simple manner we 
+does not appear to be promising at least in such a simple manner we
 used(regarding context as a word after and a word before) .
-Probably, more non-trivial context features should be taken into account 
+Probably, more non-trivial context features should be taken into account
 - such as ex. part-of-speech tag.
 On the other hand, such simple method as guessing semantic features on the
-basis of the surface form of the word brought more favourable %positive?promising?
-results in terms of precision. It was also an interesting observation, that 
-adding context features to that morphological to hte machine learning
-negatively influnced the overall quality.
+basis of the surface form of the word brought more favorable %positive?promising?
+results in terms of precision. It was also an interesting observation, that
+adding context features to that morphological to the machine learning
+negatively influenced the overall quality.
 
 The possible future directions of our work will lie both in the field of
-optimising features for the Machine Learning algorithm as well as 
+optimizing features for the Machine Learning algorithm as well as
 adapting WordNet as training and test data for our task.
 
 \bibliographystyle{aaai} \bibliography{biblio}
