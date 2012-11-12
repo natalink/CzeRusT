@@ -304,7 +304,7 @@ This naive approach has several drawbacks. Most importantly, our number of featu
 For this, we did several corrections:
 \begin{itemize}
     \item we take the feature only when the given context word was seen in at least some 
-fixed number of training examples $max$ - it is not going to help us too much 
+fixed number of training examples $min$ - it is not going to help us too much 
 if only few words have this word as a context (what is meant here 
 as ``training example'' is a word from lexicon)
     
@@ -320,7 +320,7 @@ We ignore the values when the integer value is smaller than 1 (that means, if th
 
 \end{itemize}
 
-If we put $max$ as 40, the number of features is 2,008.
+If we put $min$ as 40, the number of features is 1,502.
 
 \subsection{Morphology}
 As you will see further, experiments with context were not that successful. 
@@ -337,9 +337,9 @@ and the rest will be 0). On the other hand, it is much easier to find such featu
 for a new word, because you just look at the word itself and you don't need to dig through the dictionary.
 
 As with the previous features, the number quickly explodes. We repeat the first measure 
-to stop feature explosion - we use only those endings as features that have at least $max$ words in the lexicon ending with these endings.
+to stop feature explosion - we use only those endings as features that have at least $min$ words in the lexicon ending with these endings.
 
-If we put $max$ as 5, the number of features is 433.
+If we put $min$ as 5, the number of features is 433.
 
 \subsection{Combination}
 We also tried to combine the two approaches.
@@ -374,6 +374,8 @@ On the training set, we put aside a heldout set, and we train the parameters $\l
 These parameters vary from classifier to classifier; for a given feature set, we train 14 classifiers (one for every semantic category), together with training $\lambda$ and $\gamma$ parameters, and then we test those categories on the test set.
 
 \subsection{Mulan}
+\todo{???}???možná vyškrtnem úplně, pokusy jsem nestihnul, navíc by to zabralo asi až moc času
+
 WEKA (short for ``Waikato Environment for Knowledge Analysis'') is a general framework for machine translation, developed at the University of Waikato.
 
 We couldn't use WEKA directly, because the algorithms that it provides are not compatible with multi-labeled sets such as ours. \todo{citace z FAQ}
@@ -444,9 +446,62 @@ If we break it into individual classifiers, we got these results
 You can see that we got a 0 F-score with several categories. This unfortunately happens, because there is very little examples for those categories in the \emph{testing} data and they all got misaligned.
 
 \subsubsection{Context}
-This will hurt.
+If we take as a context feature 1 word on the left and 1 word on the right, and $min$ set as 40, we have 980 features. With those, results are as follows:
 
 
+\begin{tabular}{|r|r|r|r|r|r|r|}
+ \hline
+ & \textbf{Micro precision} &  \textbf{Micro recall}  &  \textbf{Micro F-Score} & \textbf{Macro precision} &  \textbf{Macro recall}  &  \textbf{Macro F-Score} \\ \hline
+Context with distance 1 & 0.27 & 0.57 & 0.36 & 0.23 & 0.48 & 0.30 \\ \hline
+\end{tabular}
+
+
+If we take words with distance 2 (with $min$ still 40), we got 1,501 features. The results are as follows:
+
+\begin{tabular}{|r|r|r|r|r|r|r|}
+ \hline
+ & \textbf{Micro precision} &  \textbf{Micro recall}  &  \textbf{Micro F-Score} & \textbf{Macro precision} &  \textbf{Macro recall}  &  \textbf{Macro F-Score} \\ \hline
+Context with distance 2 & 0.28 & 0.62 & 0.39 & 0.23 & 0.49 & 0.32 \\ \hline
+\end{tabular}
+
+We can see that the results are not that much better.
+
+\subsubsection{Combination - endings and beginnigs of context words}
+What we can do now is add the ``combination'' of morphology and context - that is, we can try to add endings and beginnings of the words on the left and on the right.
+
+We originally wanted to let the $min$ value 40 to keep the experiments ``consistent'', but the feature space exploded quickly. So, as a way of a very primitive feature cutting, we increased the $min$ value for the features where we take more letters.
+
+If we take the endings and beginnings of context words with the distances 1, we have these results:
+
+(We took $min$ as 40 for the lengths 1, 80 for the length 2 and 140 for the length 3. Those numbers are quite arbitrarily chosen to keep the feature space relatively small, so the algorithms don't become too slow and the feature space too big.)
+
+\todo{najít ??}
+\begin{tabular}{|r|r|r|r|r|r|r|r|}
+     & \textbf{Feature count} &  \textbf{Micro recall}  &  \textbf{Micro F-Score} & \textbf{Macro precision} &  \textbf{Macro recall}  &  \textbf{Macro F-Score} \\ \hline
+1 letter & 138 & 0.22 & 0.47 & 0.30 & 0.20 & 0.43 & 0.29 \\ \hline
+1, 2 letters & 917 & 0.25 & 0.54 & 0.35 & 0.22 & 0.48 & 0.30 \\ \hline
+1, 2, 3 letters & ?1700? & 0.26 & 0.54 & 0.35 & 0.23 & 0.48 & 0.31 \\ \hline
+
+\end{tabular}
+
+As you can see, with the added 3rd letter, we are not getting much better and the feature space is growing, making our algorithm slower. We are also still worse than with the context alone.
+
+\todo{Tohle je lež, nechtělo se mi to dobíhat do konce}We had similar results with the experiments with the context of distance two.
+
+We can wonder if the reason, why the context is not working as well as we would want, is that the feature space is simply too big. However, even with reducted space, we never got better results from this ``combined'' way than from pure context; that means, that all we can get out of context is best done by looking at the context alone, not at its endings or beginnings.
+
+\subsubsection{Combination - putting features together}
+We thought that with combined feature from context and morphology, the approaches would complement themselves and the results would get better, than either of them (especially morphology).
+
+However, this didn't turn out to be true - the results are very slightly worse, than with morphology alone, further underlining the fact that the morphology of the words, at least in our case and with our technique, is more useful than context.
+
+\begin{tabular}{|r|r|r|r|r|r|r|}
+ \hline
+ & \textbf{Micro precision} &  \textbf{Micro recall}  &  \textbf{Micro F-Score} & \textbf{Macro precision} &  \textbf{Macro recall}  &  \textbf{Macro F-Score} \\ \hline
+Combined features & 0.54 & 0.70 & 0.61 & 0.33 & 0.42 & 0.37 \\ \hline
+\end{tabular}
+
+\todo{???}I don't know what more to write but I won't add any new tables. Blah blah blah.
 
 \subsection{Suffixes and a semantic category}
 %It is a known fact, that
