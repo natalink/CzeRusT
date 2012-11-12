@@ -5,7 +5,12 @@
 \usepackage{times}
 \usepackage{helvet}
 \usepackage{courier}
-\usepackage{todonotes}
+%\usepackage{todonotes}
+
+%\newcommand{\todofnfootnote}{}
+\newcommand{\todofn}[1] {
+ \footnote{\textbf{TODO : #1}}}
+
 \usepackage{url}
 \frenchspacing
 \pdfinfo{
@@ -18,12 +23,11 @@
 % proceedings, working notes, and technical reports.
 %
 
-\title{}
-%\author{}
+\title{Experiments in maching learning for automatic semantic feature assignment}
+\author{Karel Bílek, Natalija Kljueva}
 \maketitle
 \begin{abstract}
-\begin{quote}
-\end{quote}
+\todofn{??}Nemáme
 \end{abstract}
 
 
@@ -43,7 +47,7 @@ of a noun as features for machine learning.
 %The work has been carried out for Czech language.
 
 Recently many tools for automatic semantic annotation have been created, like
-clustering \todo{really clustering?} words into semantic classes(\cite{baroni:2009} - for German and Italian), 
+clustering \todofn{really clustering?} words into semantic classes(\cite{baroni:2009} - for German and Italian), 
 semantic relation assignment \cite{peirsman}. The most well-known resource
 in the field WordNet \cite{wordnet} presents the lexicon of words
 interlinked by semantic relations and organized hierarchically into 
@@ -57,17 +61,17 @@ while we use the word ``feature'' purely for machine learning feature.
 
 
 \section{Motivation}
-\subsection{Semantic features}
-Semantic features are generally viewed as components of meaning
+\subsection{Semantic categories}
+Semantic categories are generally viewed as components of meaning
 that express one definite sense of a word. They are generally associated
 with the contrastive context, so they occur either with plus or minus
 sign, ex. [+human], [-time] etc.
 
-There is no general set of semantic features, as researches
+There is no general set of semantic categories, as researches
 use their own classification depending on their goals. The
-number of semantic features can vary from only a few components (like
+number of semantic categories can vary from only a few components (like
 devision of nouns into 'animated' or 'non-animated') to the very
-fine-grained meaning classification like in WordNet. Semantic features
+fine-grained meaning classification like in WordNet. Semantic categories 
 are therefore closely related to the ontology creating.
 
 They can be also used for some minor research problems, as, for example
@@ -77,20 +81,20 @@ with the help of semantic categories of nouns they modify.
 
 For example, 
 this discriminates several senses of the  adjective \textit{short}
-: applied to those nouns with the sem. feature [+human] versus in combination
+: applied to those nouns with the sem. category [+human] versus in combination
 with a [+interval] noun. The phrase \textit{short girl} is translated
 into Czech as \textit{mala holka}, whereas \textit{short day} is \textit{kratky den}.
 
 This can be also applied to disambiguation of senses of verbs:\\ 
-(1)\textit{The dog runs after the owner.} - [+human] feature of a subject\\
-(2) \textit{The program runs on Linux.} -[+computer] feature of a subject \\
+(1)\textit{The dog runs after the owner.} - [+human] category of a subject\\
+(2) \textit{The program runs on Linux.} -[+computer] category of a subject \\
 The latter verb is translated into Czech with the same verb \textit{běžet}
 for both senses, so this concrete ambiguity is not relevant for
 the translation between English and Czech. On the other hand, in Russian
 it might cause a mistake: while the verb in (1) will be still \textit{běžat'} in Russian,
 the metaphorical meaning in (2) is expressed by another verb - \textit{rabotat'} - to work.
-More examples on how the semantic features work will be presented in the next section
-after the lexicon description.
+More examples on how the semantic categories work will be presented in the next section
+after the lexicon description. \todofn{Will it?}
 
 \subsection{Classification}
 We realized that the task of semantic category assignment can easily be written as a task of classication, 
@@ -124,7 +128,7 @@ of syntactic analysis for Czech for the Czech-English Machine Translation
 and \cite{pisa2010} extracted the morphosyntactic information for
 valency dictionary.
 
-%One of the parts of the system \todo{really?} was a dictionary with added 
+%One of the parts of the system \todofn{really?} was a dictionary with added 
 The core of the MT system RUSLAN was a dictionary with rich linguistic annotation.
 for the rule-based translation. We ignore the Russian 
 part of the dictionary and use purely the Czech side. We extracted the 
@@ -186,15 +190,15 @@ D & 32 & action \\ \hline
 As you can see, the sum is bigger than the number of words; on average, each words has 1.4 categories.
 
 
-\subsubsection{Semantic features and their role in Ruslan}
-%\todo{Následující dvě kapitoly vůbec nechápu. Věřím ti, že jsou OK. Karel}There are 
-There are 29 semantic features in Ruslan, and each word can have more than one
+\subsubsection{Semantic categories and their role in Ruslan}
+\todofn{Následující dvě kapitoly vůbec nechápu. Věřím ti, že jsou OK. Karel} 
+There are 29 semantic categories in Ruslan, and each word can have more than one
 feature assigned. In our work we will use only few of them - *H(animated), *A(abstract),
 *K(concrete), *INS(institution), *INT(interval) etc. present in the above table.
 The semantic categories were introduced mainly for disambiguation of verbs.
 Verbs are assigned by the arguments which have restriction on nouns with definite semantic prperties. In example (3)
 the subject of the verb 'to coordinate' can be [+human] or [+institution], whereas
-the object should have the semantic features either [+concrete] or [+abstract]. The sign (-)
+the object should have the semantic categories either [+concrete] or [+abstract]. The sign (-)
 before the set of features shows that those features are prohibited to used in this context.
 Following is the example of an entry:
 (3)koordinovat(n(+(*h,*ins,*z,*os)),a(+(*a,*k),-(*h,*ins)),koordinirovat').
@@ -203,8 +207,8 @@ We will show now on a rather frequent verb 'to come to' \footnote{The more frequ
 how semantic information can influence the disambiguation process.\\
 The ambiguous verb \textit{dojít}that has a literal sense of \textit{going somewhere}
 and both metaphorical meaning \textit{to happen} can be translated properly
-due to the semantic features assigned to its actants. In (4cz) the
-agent has the semantic feature (*H) - animated, so the verb is translated
+due to the semantic categories assigned to its actants. In (4cz) the
+agent has the semantic category (*H) - animated, so the verb is translated
 in its literal meaning (in Russian 'dojti'), whereas in (4cz) the actant does not have this feature
 and it is translated as 'proizojti':
 
@@ -225,7 +229,7 @@ so that translation process failed to produce a result at all. This
 happened especially when a valency frame contained the prohibition
 to use words with definite semantic features.
 
-%\todo{????? nerozumim - tak to vymazeme,to neni podstatne}We will not use the prohibited features for our prposes, they will be rather "recommended" on the basis of
+%\todofn{????? nerozumim - tak to vymazeme,to neni podstatne}We will not use the prohibited features for our prposes, they will be rather "recommended" on the basis of
 %statistics.
 
 
@@ -289,7 +293,7 @@ right from the words, and use the counts as a feature type.
 %The statistics of the corpus shows that it is very probable to meet the animated noun in this context.
 %Our assumption was that a noun on the left from '\textit{looked}' is highly probable to have a category [anim].
 
-Let us describe it in more detail for, for example, \todo{To je divne napsane} position 1 left. For every word in the lexicon, we 
+Let us describe it in more detail for, for example, \todofn{To je divne napsane} position 1 left. For every word in the lexicon, we 
 look at all the words, appearing left from them. If $n$ such words appear, we will then have $n$ separate 
 features for our words, where the value of the feature would be the word count.
  
@@ -348,7 +352,7 @@ Aside from just putting all the features together, we tried to include the morph
 That means - we tried to add features as ``the count of the combinations of last 3 letters of the words 2 on the right'', and so on.
 
 The results were disappointing, though, as will be described further. 
-We think this is because the feature space becomes unrealistically big and the so-called \todo{reference!!} curse of dimensionality starts to take place. Basically, we get huge matrix with more features than training examples, but most of the matrix is empty.
+We think this is because the feature space becomes unrealistically big and the so-called \todofn{reference!!} curse of dimensionality starts to take place. Basically, we get huge matrix with more features than training examples, but most of the matrix is empty.
 
 We tried some simple algorithms for feature reduction, but we didn't get very far with those.
 
@@ -356,7 +360,7 @@ We tried some simple algorithms for feature reduction, but we didn't get very fa
 \subsection{Logistic Regression}
 For our first approach, we got heavily inspired by the Andrew Ng Machine Learning MOOC  on Coursera.org.
 
-\todo{Mělo by to tu vůbec být? Kdo chce, může si o tom zjistit něco víc.}Let's suppose that the feature vector is called $y$ and the category, that we want to predict, is called $x$.
+\todofn{Mělo by to tu vůbec být? Kdo chce, může si o tom zjistit něco víc.}Let's suppose that the feature vector is called $y$ and the category, that we want to predict, is called $x$.
 
 In binary logistic regression model with \emph{one category} (meaning - the classifier just predicts 0 or 1), the classifier learns a vector $\theta$, which is as long as the input feature vector. The vector $\theta$ is then multiplied with the feature vector $y$, which gives us value $z$. We then take the value $z$ and apply the so-called sigmoid function or logistic function ($\frac{1}{1+e^{-z}}$), which then gives us a number $h_\theta(x)$. That number is chance that the example \textbf{is} in a given category. We can then output 1 if the chance is higher than some number $\gamma$ (usually 0.5).
 
@@ -374,13 +378,13 @@ On the training set, we put aside a heldout set, and we train the parameters $\l
 These parameters vary from classifier to classifier; for a given feature set, we train 14 classifiers (one for every semantic category), together with training $\lambda$ and $\gamma$ parameters, and then we test those categories on the test set.
 
 \subsection{Mulan}
-\todo{???}???možná vyškrtnem úplně, pokusy jsem nestihnul, navíc by to zabralo asi až moc času
+\todofn{???}???možná vyškrtnem úplně, pokusy jsem nestihnul, navíc by to zabralo asi až moc času
 
 WEKA (short for ``Waikato Environment for Knowledge Analysis'') is a general framework for machine translation, developed at the University of Waikato.
 
-We couldn't use WEKA directly, because the algorithms that it provides are not compatible with multi-labeled sets such as ours. \todo{citace z FAQ}
+We couldn't use WEKA directly, because the algorithms that it provides are not compatible with multi-labeled sets such as ours. \todofn{citace z FAQ}
 
-However, we later found out \todo{přidat citace ze stránky Mulan projektu} that (ten týpek z řecka) have developed a system, 
+However, we later found out \todofn{přidat citace ze stránky Mulan projektu} that (ten týpek z řecka) have developed a system, 
 based on WeKA, supporting multi-labeled machine learning, called Mulan.
 
 Mulan has not only implemented various machine learning algorithms that we can directly leverage, but it also already 
@@ -389,15 +393,15 @@ covers evaluation for multi-labeled machine learning, which is by itself a diffi
 We used some of the algorithms that Mulan provides, together with 10-fold cross-validation that Mulan automatically provides.
 
 \section{Machine Learning evaluation}
-Because we use multi-labeled classification, we cannot use only precision and recall. Instead, we use so-called micro-average and macro-average of both precision and recall, and then make their mean average for micro-averaged and macro-averaged F-score.
+Because we use multi-labeled classification, we cannot use only precision and recall. Instead, we use so-called micro-average and macro-average of both precision and recall, and then make their mean average for micro-averaged and macro-averaged F-score. We use $\mu$ as short for micro and $M$ as short for macro.
 
-Micro- and macro-averaged precision and recall is defined as \todo{citace \url{http://datamin.ubbcluj.ro/wiki/index.php/Evaluation_methods_in_text_categorization}} 
+Micro- and macro-averaged precision and recall is defined as \todofn{citace \url{http://datamin.ubbcluj.ro/wiki/index.php/Evaluation_methods_in_text_categorization}} 
 
-$$P_{\mathrm{micro}} = \frac{\sum_{i=1}^{|C|}TP_{i}}{\sum_{i=1}^{|C|}TP_{i}+FP_{i}}; \quad R_{\mathrm{micro}} = \frac{\sum_{i=1}^{|C|}TP_{i}}{\sum_{i=1}^{|C|}TP_{i}+FN_{i}}$$
+$$P_{\mathrm{\mu}} = \frac{\sum_{i=1}^{|C|}TP_{i}}{\sum_{i=1}^{|C|}TP_{i}+FP_{i}}; \quad R_{\mathrm{\mu}} = \frac{\sum_{i=1}^{|C|}TP_{i}}{\sum_{i=1}^{|C|}TP_{i}+FN_{i}}$$
 
-$$P_{\mathrm{macro}}=\frac{1}{|C|}\sum_{i=1}^{|C|}\frac{TP_{i}}{TP_{i}+FP_{i}};\quad R_{\mathrm{macro}}=\frac{1}{|C|}\sum_{i=1}^{|C|}\frac{TP_{i}}{TP_{i}+FN_{i}}$$
+$$P_{\mathrm{M}}=\frac{1}{|C|}\sum_{i=1}^{|C|}\frac{TP_{i}}{TP_{i}+FP_{i}};\quad R_{\mathrm{M}}=\frac{1}{|C|}\sum_{i=1}^{|C|}\frac{TP_{i}}{TP_{i}+FN_{i}}$$
 
-where $TP_i$ is true positive given a category $i$. Basically, micro-averaging gives equal weights to every document, while macro-averaging gives equal weights to every category\todo{opět citace \url{http://datamin.ubbcluj.ro/wiki/index.php/Evaluation_methods_in_text_categorization}}.
+where $TP_i$ is true positive given a category $i$. Basically, micro-averaging gives equal weights to every document, while macro-averaging gives equal weights to every category\todofn{opět citace \url{http://datamin.ubbcluj.ro/wiki/index.php/Evaluation_methods_in_text_categorization}}.
 
 \section{Results}
 All the results are rounded to two significant digits.
@@ -406,21 +410,23 @@ All the results are rounded to two significant digits.
 
 For comparison, we began with two ``baseline'' algorithms - first was random classifier, that didn't look at the features at all; the second was logistic regression model, but learned on randomly generated 200 columns of random ``features''.
 
-% v resultech - první micro, potom macro
+% v resultech - první micro, potom macr
+%\begin{table}
 \begin{tabular}{|r|r|r|r|r|r|r|}
  \hline
- & \textbf{Micro precision} &  \textbf{Micro recall}  &  \textbf{Micro F-Score} & \textbf{Macro precision} &  \textbf{Macro recall}  &  \textbf{Macro F-Score} \\ \hline
-Random classifier & 0.11 & 0.51 & 0.19 & 0.11 & 0.57 & 0.18 \\ \hline
-Random features & 0.30 & 0.36 & 0.32 & 0.10 & 0.14 & 0.12 \\ \hline
+ & $P_\mu$ & $R_\mu$ & $F_\mu$ & $P_M$ & $R_M$  & $F_M$ \\ \hline
+Rand. class. & 0.11 & 0.51 & 0.19 & 0.11 & 0.57 & 0.18 \\ \hline
+Rand. feas. & 0.30 & 0.36 & 0.32 & 0.10 & 0.14 & 0.12 \\ \hline
 \end{tabular}
+%\end{table}
 
 \subsubsection{Morphological features}
-When we take the features as described in the section \todo{reference}, we got these results:
+When we take the features as described in the section \todofn{reference}, we got these results:
 
 
 \begin{tabular}{|r|r|r|r|r|r|r|}
  \hline
- & \textbf{Micro precision} &  \textbf{Micro recall}  &  \textbf{Micro F-Score} & \textbf{Macro precision} &  \textbf{Macro recall}  &  \textbf{Macro F-Score} \\ \hline
+ & $P_\mu$ & $R_\mu$ & $F_\mu$ & $P_M$ & $R_M$  & $F_M$ \\ \hline
 Morphology & 0.57 & 0.66 & 0.61 & 0.46 & 0.41 & 0.43 \\ \hline
 \end{tabular}
 
@@ -428,7 +434,8 @@ If we break it into individual classifiers, we got these results
 
 
 \begin{tabular}{|r|r|}
-    A & 0.57 \\ \hline
+\hline
+A & 0.57 \\ \hline
     C & 0.75 \\ \hline
     R & 0.66 \\ \hline
     K & 0.58 \\ \hline
@@ -451,8 +458,8 @@ If we take as a context feature 1 word on the left and 1 word on the right, and 
 
 \begin{tabular}{|r|r|r|r|r|r|r|}
  \hline
- & \textbf{Micro precision} &  \textbf{Micro recall}  &  \textbf{Micro F-Score} & \textbf{Macro precision} &  \textbf{Macro recall}  &  \textbf{Macro F-Score} \\ \hline
-Context with distance 1 & 0.27 & 0.57 & 0.36 & 0.23 & 0.48 & 0.30 \\ \hline
+ & $P_\mu$ & $R_\mu$ & $F_\mu$ & $P_M$ & $R_M$  & $F_M$ \\ \hline
+Dist. 1 & 0.27 & 0.57 & 0.36 & 0.23 & 0.48 & 0.30 \\ \hline
 \end{tabular}
 
 
@@ -460,8 +467,8 @@ If we take words with distance 2 (with $min$ still 40), we got 1,501 features. T
 
 \begin{tabular}{|r|r|r|r|r|r|r|}
  \hline
- & \textbf{Micro precision} &  \textbf{Micro recall}  &  \textbf{Micro F-Score} & \textbf{Macro precision} &  \textbf{Macro recall}  &  \textbf{Macro F-Score} \\ \hline
-Context with distance 2 & 0.28 & 0.62 & 0.39 & 0.23 & 0.49 & 0.32 \\ \hline
+ & $P_\mu$ & $R_\mu$ & $F_\mu$ & $P_M$ & $R_M$  & $F_M$ \\ \hline
+Dist. 2 & 0.28 & 0.62 & 0.39 & 0.23 & 0.49 & 0.32 \\ \hline
 \end{tabular}
 
 We can see that the results are not that much better.
@@ -482,11 +489,14 @@ so the algorithms don't become too slow and the feature space too big.)
 
 %\todo{najít ??}
 \begin{table}
+
+
 \begin{tabular}{|r|r|r|r|r|r|r|r|}
-     & \textbf{Feature count} &  \textbf{Micro recall}  &  \textbf{Micro F-Score} & \textbf{Macro precision} &  \textbf{Macro recall}  &  \textbf{Macro F-Score} \\ \hline
-1 letter & 138 & 0.22 & 0.47 & 0.30 & 0.20 & 0.43 & 0.29 \\ \hline
-1, 2 letters & 917 & 0.25 & 0.54 & 0.35 & 0.22 & 0.48 & 0.30 \\ \hline
-1, 2, 3 letters & ?1700? & 0.26 & 0.54 & 0.35 & 0.23 & 0.48 & 0.31 \\ \hline
+\hline
+lets.&feats & $P_\mu$ & $R_\mu$ & $F_\mu$ & $P_M$ & $R_M$  & $F_M$ \\ \hline
+1 & 138 & 0.22 & 0.47 & 0.30 & 0.20 & 0.43 & 0.29 \\ \hline
+1, 2  & 917 & 0.25 & 0.54 & 0.35 & 0.22 & 0.48 & 0.30 \\ \hline
+1, 2, 3  & ?1700? & 0.26 & 0.54 & 0.35 & 0.23 & 0.48 & 0.31 \\ \hline
 
 \end{tabular}
 \caption{Combination context and endings}
@@ -494,8 +504,6 @@ so the algorithms don't become too slow and the feature space too big.)
 As you can see, with the added 3rd letter, we are not getting much better and 
 the feature space is growing, making our algorithm slower. We are also still worse than with the context alone.
 
-%\todo{Tohle je lež, nechtělo se mi to dobíhat do konce}We had similar results with the experiments with the context 
-%of distance two.
 
 We can wonder if the reason, why the context is not working as 
 well as we would want, is that the feature space is simply too big. 
@@ -513,11 +521,10 @@ is more useful than context.
 
 \begin{tabular}{|r|r|r|r|r|r|r|}
  \hline
- & \textbf{Micro precision} &  \textbf{Micro recall}  &  \textbf{Micro F-Score} & \textbf{Macro precision} &  \textbf{Macro recall}  &  \textbf{Macro F-Score} \\ \hline
-Combined features & 0.54 & 0.70 & 0.61 & 0.33 & 0.42 & 0.37 \\ \hline
+ & $P_\mu$ & $R_\mu$ & $F_\mu$ & $P_M$ & $R_M$  & $F_M$ \\ \hline
+Combined & 0.54 & 0.70 & 0.61 & 0.33 & 0.42 & 0.37 \\ \hline
 \end{tabular}
 
-%\todo{???}I don't know what more to write but I won't add any new tables. Blah blah blah.
 
 \subsection{Suffixes and a semantic category}
 %It is a known fact, that
