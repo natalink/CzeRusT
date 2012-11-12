@@ -93,14 +93,18 @@ More examples on how the semantic features work will be presented in the next se
 after the lexicon description.
 
 \subsection{Classification}
-We realized that the task of semantic category assignment can easily be written as a task of classication, using supervised machine learning algorithms.
+We realized that the task of semantic category assignment can easily be written as a task of classication, 
+using supervised machine learning algorithms.
 
-Generally, in supervised machine learning, we have a set of training data with defined categories and we want to build an algorithm, which will generalize from this training data and return a category for any yet unseen data.
+Generally, in supervised machine learning, we have a set of training data with defined 
+categories and we want to build an algorithm, which will generalize from this training data and return a category for any yet unseen data.
 
-More specifically, in most of the algorithms, the training data can be broken into \textit{examples}, and each of the examples can be described as a set of \textit{features} and a given \textit{category}. The machine learning algorithm is usually a model with variable parameters, which are then learned from the training data.
+More specifically, in most of the algorithms, the training data can be broken into
+\textit{examples}, and each of the examples can be described as a set of \textit{features} and a given \textit{category}. The machine learning algorithm is usually a model with variable parameters, which are then learned from the training data.
 
 
-With our data, we can take the words from the lexicon as training examples and their linguistic categories as categories in machine learning.
+With our data, we can take the words from the lexicon as training examples 
+and their linguistic categories as features in machine learning.
 
 
 
@@ -176,8 +180,8 @@ D & 32 & action \\ \hline
 INS & 23 & institution \\ \hline
 INT & 20 & interval \\ 
 \hline
-\caption{Semantic categories in training data}
 \end{tabular}
+\caption{Semantic categories in training data}
 \end{table}
 
 As you can see, the sum is bigger than the number of words; on average, each words has 1.4 categories.
@@ -193,6 +197,7 @@ Verbs are assigned by the arguments which have restriction on nouns with definit
 the subject of the verb 'to coordinate' can be [+human] or [+institution], whereas
 the object should have the semantic features either [+concrete] or [+abstract]. The sign (-)
 before the set of features shows that those features are prohibited to used in this context.
+Following is the example of an entry:
 (3)koordinovat(n(+(*h,*ins,*z,*os)),a(+(*a,*k),-(*h,*ins)),koordinirovat').
 
 We will show now on a rather frequent verb 'to come to' \footnote{The more frequent is the verb the more likely it is ambiguous} 
@@ -202,10 +207,11 @@ and both metaphorical meaning \textit{to happen} can be translated properly
 due to the semantic features assigned to its actants. In (4cz) the
 agent has the semantic feature (*H) - animated, so the verb is translated
 in its literal meaning (in Russian 'dojti'), whereas in (4cz) the actant does not have this feature
-and it is translated as 'proizojti':\\
+and it is translated as 'proizojti':
+
 (4cz) DOJDE +(*H,*Z,*P,*F),K(D,DO(G)))),DOJTI):\\
-Děda nemůže dojít do ordinace sám.\\
-lit. Granny couldn't go to hospital on his own\\
+\textit{Děda nemůže dojít do ordinace sám.}\\
+lit. \textit{Granny couldn't go to hospital on his own}\\
 
 (5cz) DOJDE (K(D(*C,*A),N)),PROIZOJTI)\footnote{We should mention, that in this example
 not only the semantics is taken into account, but also the surface realization of an argument}.\\
@@ -220,8 +226,8 @@ so that translation process failed to produce a result at all. This
 happened especially when a valency frame contained the prohibition
 to use words with definite semantic features.
 
-\todo{????? nerozumim}We will not use the prohibited features for our prposes, they will be rather "recommended" on the basis of
-statistics.
+%\todo{????? nerozumim - tak to vymazeme,to neni podstatne}We will not use the prohibited features for our prposes, they will be rather "recommended" on the basis of
+%statistics.
 
 
 \subsection{Monolingual data corpus}
@@ -261,10 +267,12 @@ Also, some of those were genuine mistakes and some of those were caused by diffe
 
 
 \section{Machine Learning features}
-\subsection{Context}
 One of the major decisions for us was chosing the proper 
-features for the machine learning.
+features for the machine learning. The features we used in our work are
+of two types - 'Context features' and 'Morphological features'. 
+Roughly speaking, we exploited syntax and morphology in order to learn semantics of a word.  
 
+\subsection{Context}
 As J. R. Firth stated ``Words shall be known by the company they keep'',
 and our first idea (and the whole reason of finding a mono-lingual corpus in the first place) 
 was to look at the context in which the words appear and try to convert it to machine learning features.
@@ -276,7 +284,11 @@ from a context, but only adjectives were taken into account.
 In our experiment we use all part of speech as a context. 
 
 We tried to count the words, appearing on the position 1 and 2 words left and 
-right from the words, and use the counts as a feature type.
+right from the words, and use the counts as a feature type. 
+%For example, assuming we have
+%a sentence chunk with a word from training data with a semantic category [animated]:'the \textbf{visitor}[anim] looked'.
+%The statistics of the corpus shows that it is very probable to meet the animated noun in this context.
+%Our assumption was that a noun on the left from '\textit{looked}' is highly probable to have a category [anim].
 
 Let us describe it in more detail for, for example, \todo{To je divne napsane} position 1 left. For every word in the lexicon, we 
 look at all the words, appearing left from them. If $n$ such words appear, we will then have $n$ separate 
@@ -420,16 +432,42 @@ where $TP_i$ is true positive given a category $i$. Basically, micro-averaging g
 %\end{center}
 %\end{table}
 
-%\subsection{Suffixes and a semantic category}
+\subsection{Suffixes and a semantic category}
 %It is a known fact, that
-%In (Kirchner?) it was stated, that the form of a word can to some extent
-%signalyze the semantic class of it. For example, 'ee' - [+human, profession]
-%Below are the examples of the endings and the respective endings that
-%can indicate them according to our experiments.
+%In (Kirchner?) it was stated, that 
+One of the linguistically valuable side-effects of our research can be 
+the set of endings of words that aremost likely to belong to the
+respective semantic category.
+The form of a word can to some extent signalyze the semantic class of it. 
+For example, 'er' or 'ee' denote [+human, profession] semantic category of a word.
+Below are the examples of the endings that
+can indicate the semantic features of words according to our experiments.
 %Because of the experiment setup it is rather tricky to trust high precision
 %score. 
 
-%A abstract : \textit{ivost, ekce, arování, íra, ita, nictví}
+%\begin{table}
+%\begin{tabular}{ll}
+%\hline
+%A abstract & \textit{ivost, ekce, ování, íra, ita, nictví}\\
+%H animated & \textit{}\\
+%C activity &&& &&&\\
+%D action  &&& &&&\\
+%R result &&& &&&\\
+%K concrete &&& &&&\\
+%M measure/unit &&& &&&\\
+%N instrument &&& &&&\\
+%V property &&& &&&\\
+%INT interval &&& &&&\\
+%INS institution &&& &&&\\
+%P program &&& &&&\\
+%F function &&& &&&\\
+%Z machinery &&& &&&\\
+%\end{tabular}
+%\caption{Sem.categories and the endings they take most frequently}
+%\end{table}
+
+%Here we faced a problem of choosing between precison and recall.
+%For instance, the suffix 'ík' in Czech 
 
 \section{Conclusion}
 In this paper we described machine learning algorithms
