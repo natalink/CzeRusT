@@ -1,3 +1,4 @@
+
 %File: formatting-instruction.tex
 \documentclass[letterpaper]{article}
 \usepackage[utf8]{inputenc}
@@ -24,7 +25,7 @@
 %
 
 \title{Experiments in maching learning for automatic semantic feature assignment}
-\author{Karel Bílek, Natalija Kljueva}
+\author{Karel Bilek, Natalija Kljueva}
 \maketitle
 \begin{abstract}
 \todofn{??}Nemáme
@@ -33,72 +34,89 @@
 
 \section{Introduction}
 
-Semantic category assignment or classification of words into semantic fields
-is exploited in development of ontologies or various NLP applications such as
-word sense disambiguation or question-answering.
+Lexicons enhanced with semantic information are frequently used 
+in various NLP applications, such as machine translation, question-answering
+or sentiment analysis. Probably the most well known resource of such kind is 
+WordNet (\cite{wordnet}), the lexicon of words
+interlinked by semantic relations and organized hierarchically into 
+semantic classes. It nowadays exists for many languages including Czech. Although it is a large scale resource providing complex semantic information, it's applicability is often limited by the fact that it was created by means of a translation of the English WordNet and that it uses a system of categories which may not fit a particular application.
 
-In this paper we present our results in experiments with automatically assigning semantic features,
-using logistic regression models. The model is trained in a supervised manner
-using a small training set of nouns that are annotated with semantic categories.
-As features of machine learning 
+Many additional tools for automatic semantic annotation have been created so far, as, e.g., 
+for clustering\todofn{really clustering?} words into semantic classes(e.g., \cite{baroni:2009} -- - for German and Italian) or for 
+semantic relation assignment \cite{peirsman} etc.  
+ 
+%Assigning semantic features to words category assignment belongs to one 
+%or classification of words into semantic fields
+%is exploited in development of ontologies or various NLP applications such as
+%word sense disambiguation or question-answering.
+
+In this paper we describe experiments with automatic assignment of semantic features (categories) to Czech nouns
+exploiting an existing resource (a small hand-annotated lexicon created originally for a machine translation system). The assignment is performed carried by means of logistic regression models. The model is trained in a supervised manner, using 
+%using a small training set of nouns that are annotated with semantic categories. 
+%We are excperimenting with 
+basically two kinds of features for machine learning --  morphological and syntactic (context behaviour) properties and their combination. The experiments give an answer to a question which type of features is more useful for the given purpose.   
+
+
+%As features of machine learning 
 %\footnote{Initially, in this context of a Machine Learning the notion 'feature' is used, but we will use 'atribute' instead so that it does not interfere with 'semantic feature' concept}.
-we have chosen both morphological and syntactic (context behaviour) properties 
-of a noun as features for machine learning.
+%we have chosen both 
 %The work has been carried out for Czech language.
 
-Recently many tools for automatic semantic annotation have been created, like
-clustering \todofn{really clustering?} words into semantic classes(\cite{baroni:2009} - for German and Italian), 
-semantic relation assignment \cite{peirsman}. The most well-known resource
-in the field WordNet \cite{wordnet} presents the lexicon of words
-interlinked by semantic relations and organized hierarchically into 
-semantic classes. 
+%Recently many tools for automatic semantic annotation have been created, like
+%clustering \todofn{really clustering?} words into semantic classes(\cite{baroni:2009} - for German and Italian), 
+%semantic relation assignment \cite{peirsman}. The most well-known resource
+%in the field WordNet \cite{wordnet} presents the lexicon of words
+%interlinked by semantic relations and organized hierarchically into 
+%semantic classes. 
 
 \subsection{Note on notation}
-Since the word ``feature'' is used both in linguistic context as a term for semantic category and in 
+Since the word ``feature'' is frequently used both in linguistic context as a term for semantic category and in 
 machine learning context as a term for describing any observable property of a learning example, for 
 better clarity, we use the term ``category'' for the notion of semantic feature, 
-while we use the word ``feature'' purely for machine learning feature.
+while we use the word ``feature'' purely for machine learning feature in the rest of this paper.
 
 
 \section{Motivation}
 \subsection{Semantic categories}
 Semantic categories are generally viewed as components of meaning
-that express one definite sense of a word. They are generally associated
+that express one definite sense of a word, they are generally associated
 with the contrastive context, so they occur either with plus or minus
-sign, ex. [+human], [-time] etc.
+sign, ex. [+human], [-time] etc. 
+There is no generally accepted set of semantic features, as researches
+usually use their own classification depending on their goals. Assigning 
+semantic features to concrete words is influenced by a general issue 
+of finding the proper level of granularity - if the number of semantic features is relatively 
+low, they are not rich enough to capture more subtle differences in the woird meaning;
+if too many of them are used, it is more difficult to assign them correctly
+for each particular word. This is probably one of the reasons why the 
+number of distinct semantic features varies in various experiments 
+from only a few (like
+the division of nouns into 'animated' or 'non-animated') to the very
+fine-grained meaning classification (as, e.g., in WordNet).
 
-There is no general set of semantic categories, as researches
-use their own classification depending on their goals. The
-number of semantic categories can vary from only a few components (like
-devision of nouns into 'animated' or 'non-animated') to the very
-fine-grained meaning classification like in WordNet. Semantic categories 
-are therefore closely related to the ontology creating.
-
-They can be also used for some minor research problems, as, for example
+Semantic categories can also be used for some minor research problems, as, for example
 resolving nominative-accusative ambiguity in Slavic languages.
 In \cite{principled_disam} the authors show the way to disambiguate adjectives
 with the help of semantic categories of nouns they modify. 
 
-For example, 
-this discriminates several senses of the  adjective \textit{short}
+For example, it may help 
+to discriminates two senses of the  adjective \textit{short}
 : applied to those nouns with the sem. category [+human] versus in combination
-with a [+interval] noun. The phrase \textit{short girl} is translated
-into Czech as \textit{mala holka}, whereas \textit{short day} is \textit{kratky den}.
+with a [+interval] noun. The phrase \textit{a short girl} is translated
+into Czech as \textit{mal\'{a} holka}, whereas \textit{a short day} is \textit{kr\'{a}tk\'{y} den}.
 
-This can be also applied to disambiguation of senses of verbs:\\ 
+It can also help to disambiguate different senses of verbs:\\ 
 (1)\textit{The dog runs after the owner.} - [+human] category of a subject\\
 (2) \textit{The program runs on Linux.} -[+computer] category of a subject \\
-The latter verb is translated into Czech with the same verb \textit{běžet}
+%The latter verb is translated into Czech with the same verb \textit{be(et}
 for both senses, so this concrete ambiguity is not relevant for
-the translation between English and Czech. On the other hand, in Russian
-it might cause a mistake: while the verb in (1) will be still \textit{běžat'} in Russian,
-the metaphorical meaning in (2) is expressed by another verb - \textit{rabotat'} - to work.
-More examples on how the semantic categories work will be presented in the next section
-after the lexicon description. \todofn{Will it?}
+the translation between English and Czech. On the other hand, If translated into Russian, the verb needs to be translated differently in different contexts: while the verb in (1) will can be translated straightforwardly as \textit{be\v{z}a\v{t}} into Russian,
+the metaphorical meaning in (2) must be expressed by another verb -- \textit{rabota\v{t}} - to work.
+%More examples on how the semantic categories work will be presented in the next section
+%after the lexicon description. \todofn{Will it?}
 
 \subsection{Classification}
-We realized that the task of semantic category assignment can easily be written as a task of classication, 
-using supervised machine learning algorithms.
+The task of semantic category assignment can be naturaly represented as a task of classication, using supervised machine learning algorithms.
 
 Generally, in supervised machine learning, we have a set of training data with defined 
 categories and we want to build an algorithm, which will generalize from this training data and return a category for any yet unseen data.
@@ -106,64 +124,47 @@ categories and we want to build an algorithm, which will generalize from this tr
 More specifically, in most of the algorithms, the training data can be broken into
 \textit{examples}, and each of the examples can be described as a set of \textit{features} and a given \textit{category}. The machine learning algorithm is usually a model with variable parameters, which are then learned from the training data.
 
-
-With our data, we can take the words from the lexicon as training examples 
+With the data we have at our disposal, we can take the semantically annotated words from the lexicon as training examples 
 and their linguistic categories as features in machine learning.
-
 
 
 \section{Sources}
 \subsection{Semantic categories}
-For the machine learning, we first needed a training set, annotated with semantic categories. 
-We decided to use the training set from the RUSLAN project.
+The neccessary condition for the success of any supervised machine learning algorithm are reliable training data. Instead of creating a new set of semantic categories and subsequently undertaking a long and costly process of manual annotation, we have decided to re-use existing high quality manually annotated data. Such data exist in the form of a bilingual dictionary of a machine translation system RUSLAN, a rule based MT system translating from Czech to Russian.
 
-
-RUSLAN was a project for automatic, rule-based translation from Czech to Russian. 
-Its creation \cite{oliva1989parser} goes back to the 80's when the Rule-Based 
-methods in Machine Translation prevailed.  The project was abandoned in 90's when
-there was no need for the MT between Czech and Russian. There were
-several attempts to exploit the data and the parts of the system, for
-example, in \cite{mt-recycled} authors tried to use the module
-of syntactic analysis for Czech for the Czech-English Machine Translation
-and \cite{pisa2010} extracted the morphosyntactic information for
-valency dictionary.
+The history of RUSLAN \cite{oliva1989parser} goes back to the second half of the 80's when there was a need for an automatic translation of operating systems manuals. The project was abandoned in 90's when
+there was no need for the MT between Czech and Russian. Since then, the resources used in the project served mainly as a source of data for other projects, for
+example, in \cite{mt-recycled} authors tried to re-use the module
+of syntactic analysis of Czech for the Czech-English Machine Translation,
+the paper \cite{pisa2010} describes the extraction of morphosyntactic information from the bilingual dictionary of RUSLAN for Czech and Russian valency dictionaries.
 
 %One of the parts of the system \todofn{really?} was a dictionary with added 
-The core of the MT system RUSLAN was a dictionary with rich linguistic annotation.
-for the rule-based translation. We ignore the Russian 
-part of the dictionary and use purely the Czech side. We extracted the 
-semantic categories from the dictionary. 
+The bilingual dictionary of RUSLAN constitutes a rich source of various kinds of data for both Czech and Russian. Apart from the target language equivalents and their morphology, the dictionary provides  morphological, syntactic and semantic information for the source language (Czech), namely declension patterns, valency frames, semantic features etc. In the current experiment we ignore the Russian (target language)
+part of the dictionary and we use (a relevant part of) the Czech side, namely the semantic features assigned to all nouns in the dictionary. 
 
-Before we describe the data further, what is needed to be said about the lexicon is 
-that the words are from a very special domain - the aim of the translation 
-and, therefore, the domain of the lexicon are mainframe computer manuals. 
+The major drawback of the dictionary of Ruslan for all kinds of experiments is its domain. The project aimed at the translation of manuals to operating systems of mainframes. It thus contains a relatively smaller number of domain-independent words, the domain related expressions prevail. On top of that, even the computer terminology has changed during the past 25 years, so  some of the words contained in the dictionary are a bit outdated. 
 That alone caused us bigger problems than we anticipated.
 
 \subsubsection{Mining data from RUSLAN dictionary}
 
-Dictionary entries in Ruslan contain morphological,
-syntactic and semantic information. The dictionary contains about 8,000 entries, 2,783 of which are nouns
-with assigned semantic categories.
+The dictionary of RUSLAN contains about 8,000 entries, 2,783 of which are nouns with assigned semantic categories.
 
-Following is the example of an entry:
+Following is an example of an entry:
 
 \begin{verbatim}
 LE2KAR3==MZ(@(*H),!,MA0111,VRAC2).
 \end{verbatim}
 
 \begin{itemize}
-\item \texttt{LE2KAR3} represents the Czech lemma \emph{lékař}; th
-e diacritics is encoded using numbers, since in the 80's, the computers didn't have the encoding options as we have today.
-\item \texttt{==MZ} represents part of speech(noun) and declension class.
+\item \texttt{LE2KAR3} represents the Czech lemma \emph{l\'{e}ka\v{r}}; the diacritics is encoded in a rather primitive way corresponding to the time when it was created and when encoding of national characters still constituted a big problem.
+\item \texttt{MZ} represents a declension pattern (and thus also determines the part of speech information because this particular declension pattern is used for masculine animate nouns in Czech).
 \item \texttt{@(*H)} represents the semantic category `animated'.
-\item \texttt{MA0111,VRAC2} represents the declination class of Russian lemma + lemma itself - 
-again, Russian alphabet couldn't be used, so the word is encoded into basic ASCII
+\item \texttt{MA0111,VRAC2} represents the declension class of the Russian equivalent and the equivalent itself, encoded into basic ASCII
 \end{itemize}
 
-From this format we extract the Czech side of the dictionary together with the semantic categories. 
+From this format we have extracted the Czech side of the dictionary together with the semantic categories. 
 When we took the categories without ``sanity checking'' and filtering out the possible mistakes, 
-we end up with 2,783 words and 29 categories; however, some of these appear only with one or two words. 
-When we filter out those categories, that don't appear with at least 30 words, we end up with those categories:
+we ended up with 2,783 words and 29 categories; however, some of these categories appear only with one or two words, therefore they are not relevant for our purpose. When we filtere out those categories, that don't appear in at least 30 words, we ended up with the fetures described in Table 1.
 
 \begin{table}
 \begin{tabular}{|l|l|l|}
@@ -187,144 +188,157 @@ D & 32 & action \\ \hline
 \end{table}
 
 
-As you can see, the sum is bigger than the number of words; on average, each words has 1.4 categories.
+The total number of categories assigned to words is bigger than the number of words because some words have more than one semantic category. In average, each words is assigned 1.4 categories.
 
 
-\subsubsection{Semantic categories and their role in Ruslan}
-\todofn{Následující dvě kapitoly vůbec nechápu. Věřím ti, že jsou OK. Karel} 
-There are 29 semantic categories in Ruslan, and each word can have more than one
-feature assigned. In our work we will use only few of them - *H(animated), *A(abstract),
-*K(concrete), *INS(institution), *INT(interval) etc. present in the above table.
-The semantic categories were introduced mainly for disambiguation of verbs.
-Verbs are assigned by the arguments which have restriction on nouns with definite semantic prperties. In example (3)
-the subject of the verb 'to coordinate' can be [+human] or [+institution], whereas
-the object should have the semantic categories either [+concrete] or [+abstract]. The sign (-)
-before the set of features shows that those features are prohibited to used in this context.
-Following is the example of an entry:
-(3)koordinovat(n(+(*h,*ins,*z,*os)),a(+(*a,*k),-(*h,*ins)),koordinirovat').
+%\subsubsection{Semantic categories and their role in Ruslan}
+%\todofn{Následující dve( kapitoly vu*bec nechápu. Ve(r(ím ti, e jsou OK. Karel} 
+%There are 29 semantic categories in Ruslan, and each word can have more than one
+%feature assigned. In our work we will use only few of them - *H(animated), *A(abstract),
+%*K(concrete), *INS(institution), *INT(interval) etc. present in the above table.
+%The semantic categories were introduced mainly for disambiguation of verbs.
+%Verbs are assigned by the arguments which have restriction on nouns with definite semantic prperties. In example (3)
+%the subject of the verb 'to coordinate' can be [+human] or [+institution], whereas
+%the object should have the semantic categories either [+concrete] or [+abstract]. The sign (-)
+%before the set of features shows that those features are prohibited to used in this context.
+%Following is the example of an entry:
+%(3)koordinovat(n(+(*h,*ins,*z,*os)),a(+(*a,*k),-(*h,*ins)),koordinirovat').
 
-We will show now on a rather frequent verb 'to come to' \footnote{The more frequent is the verb the more likely it is ambiguous} 
-how semantic information can influence the disambiguation process.\\
-The ambiguous verb \textit{dojít}that has a literal sense of \textit{going somewhere}
-and both metaphorical meaning \textit{to happen} can be translated properly
-due to the semantic categories assigned to its actants. In (4cz) the
-agent has the semantic category (*H) - animated, so the verb is translated
-in its literal meaning (in Russian 'dojti'), whereas in (4cz) the actant does not have this feature
-and it is translated as 'proizojti':
+%We will show now on a rather frequent verb 'to come to' \footnote{The more frequent is the verb the more likely it is ambiguous} 
+%how semantic information can influence the disambiguation process.\\
+%The ambiguous verb \textit{dojít}that has a literal sense of \textit{going somewhere}
+%and both metaphorical meaning \textit{to happen} can be translated properly
+%due to the semantic categories assigned to its actants. In (4cz) the
+%agent has the semantic category (*H) - animated, so the verb is translated
+%in its literal meaning (in Russian 'dojti'), whereas in (4cz) the actant does not have this feature
+%and it is translated as 'proizojti':
 
-(4cz) DOJDE +(*H,*Z,*P,*F),K(D,DO(G)))),DOJTI):\\
-\textit{Děda nemůže dojít do ordinace sám.}\\
-lit. \textit{Granny couldn't go to hospital on his own}\\
+%(4cz) DOJDE +(*H,*Z,*P,*F),K(D,DO(G)))),DOJTI):\\
+%\textit{De(da nemu*e dojít do ordinace sám.}\\
+%lit. \textit{Granny couldn't go to hospital on his own}\\
 
-(5cz) DOJDE (K(D(*C,*A),N)),PROIZOJTI)\footnote{We should mention, that in this example
-not only the semantics is taken into account, but also the surface realization of an argument}.\\
-K této situaci nemůže dojít\\
-lit. To this situation couldn't come\\
-'Such a situation could not happen'
+%(5cz) DOJDE (K(D(*C,*A),N)),PROIZOJTI)\footnote{We should mention, that in this example
+%not only the semantics is taken into account, but also the surface realization of an argument}.\\
+%K této situaci nemu*e dojít\\
+%lit. To this situation couldn't come\\
+%'Such a situation could not happen'
 
-\subsubsection{Semantic features - negative experience}
-As it was stated in \cite{KubonPHD2001} the semantic features did not
-served the purpose of disambiguation, sometimes they introduced mistakes
-so that translation process failed to produce a result at all. This
-happened especially when a valency frame contained the prohibition
-to use words with definite semantic features.
+%\subsubsection{Semantic features - negative experience}
+Before we'll introduce additional sources of data, let us make a short remark concerning the role of semantic features in the original system. The main reason why they were introduced was the endeavor to reduce the ambiguity of translation (the system tended to slightly overgenerate the results) and to disallow sentences which would not be semantically plausible. The practical experience from testing clearly showed that using the features for restriction of certain is not a good idea, they tended to be too restrictive and actually blocked the translation more often than they helped to resolve the ambiguity.
+%As it was stated in \cite{KubonPHD2001} the semantic features did not
+%served the purpose of disambiguation, sometimes they introduced mistakes
+%so that translation process failed to produce a result at all. This
+%happened especially when a valency frame contained the prohibition
+%to use words with definite semantic features.
 
 %\todofn{????? nerozumim - tak to vymazeme,to neni podstatne}We will not use the prohibited features for our prposes, they will be rather "recommended" on the basis of
 %statistics.
 
-
 \subsection{Monolingual data corpus}
-As one of our features, we decided to use the context informations, taken from a monolingual corpus.
+Because one of our methods was supposed to exploit an immediate context, it was necessary to use additional annotated corpora. As the highest quality annotation of Czech is provided in the Prague Dependency Treebank (PDT),\footnote{\url{http://ufal.mff.cuni.cz/pdt2.0/}}, it was a natural choice.   
+% data sourcea context, we As one of our features, we decided to use the context informations, taken from a monolingual corpus.
 
-However, as indicated in the previous section, we got into problems because of the strange lexicon domain.
+
 \subsubsection{PDT}
-PDT - Prague Dependency Treebank \url{http://ufal.mff.cuni.cz/pdt2.0/} - is a collection of Czech texts annotated on three
-levels - morphological, analytical and tectogrammatical.   
-PDT contains 115,844 sentences from newspapers and journals.
+PDT 
+%- Prague Dependency Treebank \url{http://ufal.mff.cuni.cz/pdt2.0/} - 
+represents a collection of Czech texts annotated on three
+levels - morphological, analytical(surface syntactic) and tectogrammatical(deep syntactic). It   
+contains 115,844 sentences from newspapers and journals.
 
-We expected most the words to appear at least once in the 115,844 sentences of 1,957,247 tokens. 
-However, out of the 2,783 words, 813 don't appear at all and 162 appear exactly once. 
+However, due to the very specific dictionary domain, we have found out that the size of PDT does not provide a sufficient coverage of the words from the RUSLAN domain. 
+%We expected most the words to appear at least once in 
+The 115,844 sentences of PDT contain 1,957,247 tokens, but out of the 2,783 words from RUSLAN, 813 don't appear at all in the entire corpus, 162 appear only once and 
 1,408 words appear less then 10 times.
 
-What this means that if we take only context in PDT as a ML feature, in almost 
-any test set about half of the words won't even be in the monolingual corpus. 
-That would cause empty feature vectors for about half of the examples in the test 
-set, which would cause half of the examples to be misaligned completely.
+These numbers clearly indicate that the contextual information based on manually annotated data from RUSLAN is too sparse for machine learning. In would actually mean that many feature vectors would be empty 
+%for about half of the examples in the test 
+%set, 
+which would cause 
+%half of the 
+many examples to be misaligned completely.
 
-For that reason, we decided to try a bigger corpus.
+For that reason, we decided to use a bigger corpus with only morphological annotation.
 
 \subsubsection{WebColl}
 
 WebColl\cite{webcoll} is a corpus of texts in Czech crawled from the Czech web, cleaned and annotated  with a POS tagger and lemmatized.
-
 WebColl consists of 7,148,630 sentences, which together have 114,867,064 tokens. 
 
-This data covers our lexicon a bit better. Out of the 2,783 words, 412 don't appear at all, 
-40 appear exactly once and 611 words appear less than 10 times. We have a monolingual 
-corpus approximately 100 - times bigger, but we removed only about a half of the unseen words.
+Although this corpus is about 100 times bigger than PDT, its data cover our lexicon only slightly more. Out of the 2,783 words, 412 don't appear at all, 
+40 appear exactly once and 611 words appear less than 10 times. In other words -- increasing the training data size approximately 100 - times results in the removal of only about a half of the unseen words.
 
-We decided, after manually reviewing the words, that those words are very domain specific 
+The manual revision of the unseen words revealed, that most of those words are very domain specific 
 (words such as ``\emph{rebasing}'', ``\emph{subroutine}'', ``\emph{self-relocability}'' and so on) 
-and they probably won't see the context no matter how big corpus we take. 
-Also, some of those were genuine mistakes and some of those were caused by different lemmatization in RUSLAN and WebColl.
+and that they probably won't see the context no matter how big corpus we take. With regard to the rest, some of those words were genuine mistakes and some of them were affected by slightly different lemmatization in used RUSLAN and WebColl (incompatible lemmas).
 
 
 \section{Machine Learning features}
-One of the major decisions for us was chosing the proper 
-features for the machine learning. The features we used in our work are
-of two types - 'Context features' and 'Morphological features'. 
+The success of machine learning algorithms to great extent depends on the 
+%One of the major decisions for us was 
+choice of proper 
+features
+% for the machine learning
+. In our experiments we have tried to exploit two types of features 
+%The features we used in our work are
+%of two types 
+- context ones and morphological ones. 
 Roughly speaking, we exploited syntax and morphology in order to learn semantics of a word.  
 
 \subsection{Context}
 As J. R. Firth stated ``Words shall be known by the company they keep'',
-and our first idea (and the whole reason of finding a mono-lingual corpus in the first place) 
-was to look at the context in which the words appear and try to convert it to machine learning features.
+therefore our first idea (and the whole reason of using a large mono-lingual corpus in the first place) 
+was to look at the context in which the words appear and to try to convert it to machine learning features.
 
-This is  the generally used method of automatic clustering now, ex. \cite{baroni:2009},
-where semantic relations were retrieved from a context as well. 
+The context can in principle be exploited in a number of different ways. For example, in \cite{baroni:2009}, the authors use a method of automatic clustering,  
+where semantic relations have been retrieved from context. 
 In \cite{biemann05} the semantic features of nouns were learned
 from a context, but only adjectives were taken into account.
-In our experiment we use all part of speech as a context. 
+We have decided to use all parts of speech as a context in our experiment. This decision was motivated by the endeavor to use as much information from the context as possible. 
 
-We tried to count the words, appearing on the position 1 and 2 words left and 
-right from the words, and use the counts as a feature type. 
+\todofn{Pokusil jsem se to prepsat, ale nevim, jestli jsem to spravne pochopil VK}
+We have taken into account the context of two words to the left and two words to the right 
+First of all, it was necessary to determine the context of all ''known'' words from the dictionary, i.e. the words whose semantic categories we know.  
+%We tried to count the words, appearing on the position 1 and 2 words left and 
+%right from the words, and use the counts as a feature type. 
 %For example, assuming we have
 %a sentence chunk with a word from training data with a semantic category [animated]:'the \textbf{visitor}[anim] looked'.
 %The statistics of the corpus shows that it is very probable to meet the animated noun in this context.
 %Our assumption was that a noun on the left from '\textit{looked}' is highly probable to have a category [anim].
-
-Let us describe it in more detail for, for example, \todofn{To je divne napsane} position 1 left. For every word in the lexicon, we 
-look at all the words, appearing left from them. If $n$ such words appear, we will then have $n$ separate 
-features for our words, where the value of the feature would be the word count.
+%Let us describe it in more detail for, for example, \todofn{To je divne napsane} position 1 left. 
+For every word from the lexicon, we 
+have looked at all words in its context
+%, appearing left from them. 
+If $n$ words are found, then it actually means that we have obtained $n$ separate 
+features for that particular word, where the value of each feature represents 
+the number of times when the feature word appeared in the context
+% would be the word count
+.
  
 The machine learning model is, then, trained on these features. To assign a category
-to another unseen word, we would then have to go through the entire corpus, count
-the features (which would basically mean to count all the words on the left and then doing an 
-intersection of the counted words and the words from the features) and then entering the 
-counts as a feature vector to the machine learning model.
+to an unseen word, we have to go through the entire corpus, count
+the features for the unsees word as well using the same algorithm as for the features of the known words. However, this time we are not collecting all words appearing in the left or right context of the unseen word, but only those appearing among the features collecting for known words (in other words, we count all the words in the context and then perform an 
+intersection of the counted words and the words from the features). Again, the number obtained for each feature is a value of that feature for the unseen word and becomes a part of the feature vector of the machine learning model.
 
-This naive approach has several drawbacks. Most importantly, our number of features explodes, while the counts themselves are very unevenly distributed.
+This naive approach has several drawbacks. Most importantly, our number of features explodes, while the values (number of appearences) themselves are very unevenly distributed.
 
-For this, we did several corrections:
+For this reason we made several corrections:
 \begin{itemize}
-    \item we take the feature only when the given context word was seen in at least some 
-fixed number of training examples $min$ - it is not going to help us too much 
-if only few words have this word as a context (what is meant here 
-as ``training example'' is a word from lexicon)
+    \item we nominate a word from context as a feature only when the given context word was seen in at least some fixed number of training examples $min$ - it is not going to help us too much 
+if only few known words have this partticular word as a context (a ``training example'' here means a word from the lexicon)
     
     \item we normalize the numbers, so that the features are all about 
-the same size. We originally wanted to use percents as numbers - meaning, 
-we wouldn't have the counts as a feature, but the percent of how often is a given word a context of the training example.
-    
-     However, then the numbers got very small, since actually, 
-in most of the training examples, even the top context features are in order of 
-tenths of percents; so we use integer value percent times ten. 
-We ignore the values when the integer value is smaller than 1 (that means, if the context is context in less than 1/1000 of cases).
+the same size. We originally wanted to use percents as values - meaning, 
+we wouldn't have the number of appearences as a feature, but the percentage of how often is a given word in the context of the training example.    
+     However, this resulted in very small numbers, since actually, 
+in most of the training examples, even the top context features are in the order of 
+tenths of percents; so, at the end we use integer value percent times ten. 
+We ignore the values when the integer value is smaller than 1 (that means, if it is the context in less than 1/1000 of cases).
      
 
 \end{itemize}
 
-If we put $min$ as 40, the number of features is 1,502.
+If we set $min$ as 40, the number of features is 1,502.
 
 \subsection{Morphology}
 As you will see further, experiments with context were not that successful. 
