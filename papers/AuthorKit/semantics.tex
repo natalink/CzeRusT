@@ -27,7 +27,15 @@
 \author{Karel Bilek, Natalija Kljueva}
 \maketitle
 \begin{abstract}
-\todofn{??}Nem·me
+In this paper we explore supervised machine learning techniques for
+assigning semantic categories to nouns. We operate with 16 semantic categories 
+relevant especially for the task of words sense disambiguation. The training
+data presents a set of 2,783 nouns with assigned semantic categories.   
+The central problem of this research is to find the features for the machine learning 
+that produce better results in the face of a small trainig data size. 
+We exploited the context of a word which is a generally used technique for this task, 
+and we also tried the morphological segments as features.
+
 \end{abstract}
 
 
@@ -107,7 +115,7 @@ into Czech as \textit{mal\'{a} holka}, whereas \textit{a short day} is \textit{k
 It can also help to disambiguate different senses of verbs:\\ 
 (1)\textit{The dog runs after the owner.} - [+human] category of a subject\\
 (2) \textit{The program runs on Linux.} -[+computer] category of a subject \\
-%The latter verb is translated into Czech with the same verb \textit{be(ûet}
+%The latter verb is translated into Czech with the same verb \textit{be(¬ûet}
 for both senses, so this concrete ambiguity is not relevant for
 the translation between English and Czech. On the other hand, If translated into Russian, the verb needs to be translated differently in different contexts: while the verb in (1) will can be translated straightforwardly as \textit{be\v{z}a\v{t}} into Russian,
 the metaphorical meaning in (2) must be expressed by another verb -- \textit{rabota\v{t}} - to work.
@@ -191,7 +199,7 @@ The total number of categories assigned to words is bigger than the number of wo
 
 
 %\subsubsection{Semantic categories and their role in Ruslan}
-%\todofn{N·sledujÌcÌ dve( kapitoly vu*bec nech·pu. Ve(r(Ìm ti, ûe jsou OK. Karel} 
+%\todofn{N√°sleduj√≠c√≠ dve( kapitoly vu*bec nech√°pu. Ve(r(√≠m ti, ¬ûe jsou OK. Karel} 
 %There are 29 semantic categories in Ruslan, and each word can have more than one
 %feature assigned. In our work we will use only few of them - *H(animated), *A(abstract),
 %*K(concrete), *INS(institution), *INT(interval) etc. present in the above table.
@@ -205,7 +213,7 @@ The total number of categories assigned to words is bigger than the number of wo
 
 %We will show now on a rather frequent verb 'to come to' \footnote{The more frequent is the verb the more likely it is ambiguous} 
 %how semantic information can influence the disambiguation process.\\
-%The ambiguous verb \textit{dojÌt}that has a literal sense of \textit{going somewhere}
+%The ambiguous verb \textit{doj√≠t}that has a literal sense of \textit{going somewhere}
 %and both metaphorical meaning \textit{to happen} can be translated properly
 %due to the semantic categories assigned to its actants. In (4cz) the
 %agent has the semantic category (*H) - animated, so the verb is translated
@@ -213,12 +221,12 @@ The total number of categories assigned to words is bigger than the number of wo
 %and it is translated as 'proizojti':
 
 %(4cz) DOJDE +(*H,*Z,*P,*F),K(D,DO(G)))),DOJTI):\\
-%\textit{De(da nemu*ûe dojÌt do ordinace s·m.}\\
+%\textit{De(da nemu*¬ûe doj√≠t do ordinace s√°m.}\\
 %lit. \textit{Granny couldn't go to hospital on his own}\\
 
 %(5cz) DOJDE (K(D(*C,*A),N)),PROIZOJTI)\footnote{We should mention, that in this example
 %not only the semantics is taken into account, but also the surface realization of an argument}.\\
-%K tÈto situaci nemu*ûe dojÌt\\
+%K t√©to situaci nemu*¬ûe doj√≠t\\
 %lit. To this situation couldn't come\\
 %'Such a situation could not happen'
 
@@ -373,7 +381,7 @@ We tried some simple algorithms for feature reduction, but we didn't get very fa
 \subsection{Logistic Regression}
 For our first approach, we got heavily inspired by the Andrew Ng Machine Learning MOOC  on Coursera.org.
 
-\todofn{Me(lo by to tu vu*bec b˝t? Kdo chce, mu*ûe si o tom zjistit ne(co vÌc.}Let's suppose that the feature vector is called $y$ and the category, that we want to predict, is called $x$.
+\todofn{Mƒõlo by to tu v≈Øbec b√Ωt? Kdo chce, m≈Ø≈æe si o tom zjistit nƒõco v√≠c.}Let's suppose that the feature vector is called $y$ and the category, that we want to predict, is called $x$.
 
 In binary logistic regression model with \emph{one category} (meaning - the classifier just predicts 0 or 1), the classifier learns a vector $\theta$, which is as long as the input feature vector. The vector $\theta$ is then multiplied with the feature vector $y$, which gives us value $z$. We then take the value $z$ and apply the so-called sigmoid function or logistic function ($\frac{1}{1+e^{-z}}$), which then gives us a number $h_\theta(x)$. That number is chance that the example \textbf{is} in a given category. We can then output 1 if the chance is higher than some number $\gamma$ (usually 0.5).
 
@@ -391,13 +399,13 @@ On the training set, we put aside a heldout set, and we train the parameters $\l
 These parameters vary from classifier to classifier; for a given feature set, we train 14 classifiers (one for every semantic category), together with training $\lambda$ and $\gamma$ parameters, and then we test those categories on the test set.
 
 \subsection{Mulan}
-\todofn{???}???moûn· vyökrtnem ˙plne(, pokusy jsem nestihnul, navÌc by to zabralo asi aû moc c(asu
+\todofn{???}???mo≈æn√° vy≈°krtnem √∫plnƒõ, pokusy jsem nestihnul, nav√≠c by to zabralo asi a≈æ moc ƒçasu
 
 WEKA (short for ``Waikato Environment for Knowledge Analysis'') is a general framework for machine translation, developed at the University of Waikato.
 
 We couldn't use WEKA directly, because the algorithms that it provides are not compatible with multi-labeled sets such as ours. \todofn{citace z FAQ}
 
-However, we later found out \todofn{pr(idat citace ze str·nky Mulan projektu} that (ten t˝pek z r(ecka) have developed a system, 
+However, we later found out \todofn{p≈ôidat citace ze str√°nky Mulan projektu} that (ten t√Ωpek z ≈ôecka) have developed a system, 
 based on WeKA, supporting multi-labeled machine learning, called Mulan.
 
 Mulan has not only implemented various machine learning algorithms that we can directly leverage, but it also already 
@@ -414,7 +422,7 @@ $$P_{\mathrm{\mu}} = \frac{\sum_{i=1}^{|C|}TP_{i}}{\sum_{i=1}^{|C|}TP_{i}+FP_{i}
 
 $$P_{\mathrm{M}}=\frac{1}{|C|}\sum_{i=1}^{|C|}\frac{TP_{i}}{TP_{i}+FP_{i}};\quad R_{\mathrm{M}}=\frac{1}{|C|}\sum_{i=1}^{|C|}\frac{TP_{i}}{TP_{i}+FN_{i}}$$
 
-where $TP_i$ is true positive given a category $i$. Basically, micro-averaging gives equal weights to every document, while macro-averaging gives equal weights to every category\todofn{ope(t citace \url{http://datamin.ubbcluj.ro/wiki/index.php/Evaluation_methods_in_text_categorization}}.
+where $TP_i$ is true positive given a category $i$. Basically, micro-averaging gives equal weights to every document, while macro-averaging gives equal weights to every category\todofn{opƒõt citace \url{http://datamin.ubbcluj.ro/wiki/index.php/Evaluation_methods_in_text_categorization}}.
 
 \section{Results}
 All the results are rounded to two significant digits.
@@ -423,7 +431,7 @@ All the results are rounded to two significant digits.
 
 For comparison, we began with two ``baseline'' algorithms - first was random classifier, that didn't look at the features at all; the second was logistic regression model, but learned on randomly generated 200 columns of random ``features''.
 
-% v resultech - prvnÌ micro, potom macr
+% v resultech - prvn√≠ micro, potom macr
 %\begin{table}
 \begin{tabular}{|r|r|r|r|r|r|r|}
  \hline
@@ -500,7 +508,7 @@ If we take the endings and beginnings of context words with the distances 1, we 
 Those numbers are quite arbitrarily chosen to keep the feature space relatively small, 
 so the algorithms don't become too slow and the feature space too big.)
 
-%\todo{najÌt ??}
+%\todo{naj√≠t ??}
 \begin{table}
 
 
@@ -549,32 +557,23 @@ The form of a word can to some extent signalize the semantic class of it.
 For example, 'er' or 'ee' denote [+human, profession] semantic category of a word.
 Below are the examples of the endings that
 can indicate the semantic features of words according to our experiments.
-%Because of the experiment setup it is rather tricky to trust high precision
-%score. 
 
-%\begin{table}
-%\begin{tabular}{ll}
-%\hline
-%A abstract & \textit{ivost, ekce, ov·nÌ, Ìra, ita, nictvÌ}\\
-%H animated & \textit{}\\
-%C activity &&& &&&\\
-%D action  &&& &&&\\
-%R result &&& &&&\\
-%K concrete &&& &&&\\
-%M measure/unit &&& &&&\\
-%N instrument &&& &&&\\
-%V property &&& &&&\\
-%INT interval &&& &&&\\
-%INS institution &&& &&&\\
-%P program &&& &&&\\
-%F function &&& &&&\\
-%Z machinery &&& &&&\\
-%\end{tabular}
-%\caption{Sem.categories and the endings they take most frequently}
-%\end{table}
+\begin{table}[!h]
+\begin{tabular}{ll}
+\hline
+A abstract & \textit{ivost, ekce, ov√°n√≠, √≠ra, ita, nictv√≠}\\
+H animated & \textit{√°tor, ovn√≠k, atel, atelka, stn√≠k, or, √≠k}\\
+C activity & \textit{en√≠, ov√°n√≠, √°n√≠, ace}\\
+D action  & \textit{en√≠, √°n√≠, ace}\\
+R result & \textit{ ita, en√≠, ut√≠, √°n√≠, akce, ut√≠}\\
+K concrete & \textit{ka, √≠ƒç, √©nko, ora}\\
+M measure/unit & \textit{etnost, ita, v√≠, o, kost, et√≠}\\
+V property & \textit{ita, nost, ce}\\
+\hline
+\end{tabular}
+\caption{Sem.categories and the endings they take most frequently}
+\end{table}
 
-%Here we faced a problem of choosing between precision and recall.
-%For instance, the suffix 'Ìk' in Czech 
 
 \section{Conclusion}
 In this paper we described machine learning algorithms
