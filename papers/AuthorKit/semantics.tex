@@ -365,7 +365,7 @@ Aside from just putting all the features together, we tried to include the morph
 That means - we tried to add features as ``the count of the combinations of last 3 letters of the words 2 on the right'', and so on.
 
 The results were disappointing, though, as will be described further. 
-We think this is because the feature space becomes unrealistically big and the so-called \todofn{reference!!} curse of dimensionality starts to take place. Basically, we get huge matrix with more features than training examples, but most of the matrix is empty.
+We think this is because the feature space becomes unrealistically big and the so-called Curse of Dimensionality starts to take place.\footnote{This is sometimes known as ``Hughes effect'', see \cite{hughes:1968}} Basically, we get huge matrix with more features than training examples, but most of the matrix is empty.
 
 We tried some simple algorithms for feature reduction, but we didn't get very far with those.
 
@@ -373,7 +373,7 @@ We tried some simple algorithms for feature reduction, but we didn't get very fa
 \subsection{Logistic Regression}
 For our first approach, we got heavily inspired by the Andrew Ng Machine Learning MOOC  on Coursera.org.
 
-\todofn{Mělo by to tu vůbec být? Kdo chce, může si o tom zjistit něco víc.}Let's suppose that the feature vector is called $y$ and the category, that we want to predict, is called $x$.
+\todofn{Mělo tu celá tato kapitola být? Kdo chce, může si o tom zjistit něco víc. Naopak já jsem tam určitě nasekal spoustu chyb.}Let's suppose that the feature vector is called $y$ and the category, that we want to predict, is called $x$.
 
 In binary logistic regression model with \emph{one category} (meaning - the classifier just predicts 0 or 1), the classifier learns a vector $\theta$, which is as long as the input feature vector. The vector $\theta$ is then multiplied with the feature vector $y$, which gives us value $z$. We then take the value $z$ and apply the so-called sigmoid function or logistic function ($\frac{1}{1+e^{-z}}$), which then gives us a number $h_\theta(x)$. That number is chance that the example \textbf{is} in a given category. We can then output 1 if the chance is higher than some number $\gamma$ (usually 0.5).
 
@@ -390,31 +390,32 @@ On the training set, we put aside a heldout set, and we train the parameters $\l
 
 These parameters vary from classifier to classifier; for a given feature set, we train 14 classifiers (one for every semantic category), together with training $\lambda$ and $\gamma$ parameters, and then we test those categories on the test set.
 
-\subsection{Mulan}
-\todofn{???}???možná vyškrtnem úplně, pokusy jsem nestihnul, navíc by to zabralo asi až moc času
-
-WEKA (short for ``Waikato Environment for Knowledge Analysis'') is a general framework for machine translation, developed at the University of Waikato.
-
-We couldn't use WEKA directly, because the algorithms that it provides are not compatible with multi-labeled sets such as ours. \todofn{citace z FAQ}
-
-However, we later found out \todofn{přidat citace ze stránky Mulan projektu} that (ten týpek z řecka) have developed a system, 
-based on WeKA, supporting multi-labeled machine learning, called Mulan.
-
-Mulan has not only implemented various machine learning algorithms that we can directly leverage, but it also already 
-covers evaluation for multi-labeled machine learning, which is by itself a difficult task that we will talk about later.
-
-We used some of the algorithms that Mulan provides, together with 10-fold cross-validation that Mulan automatically provides.
+%NAKONEC JSEM VYŠKRTL ÚPLNĚ
+%\subsection{Mulan}
+%\todofn{???}???možná vyškrtnem úplně, pokusy jsem nestihnul, navíc by to zabralo asi až moc času
+%
+%WEKA (short for ``Waikato Environment for Knowledge Analysis'') is a general framework for machine translation, developed at the University of Waikato.
+%
+%We couldn't use WEKA directly, because the algorithms that it provides are not compatible with multi-labeled sets such as ours. \todofn{citace z FAQ}
+%
+%However, we later found out \todofn{přidat citace ze stránky Mulan projektu} that (ten týpek z řecka) have developed a system, 
+%based on WeKA, supporting multi-labeled machine learning, called Mulan.
+%
+%Mulan has not only implemented various machine learning algorithms that we can directly leverage, but it also already 
+%covers evaluation for multi-labeled machine learning, which is by itself a difficult task that we will talk about later.
+%
+%We used some of the algorithms that Mulan provides, together with 10-fold cross-validation that Mulan automatically provides.
 
 \section{Machine Learning evaluation}
 Because we use multi-labeled classification, we cannot use only precision and recall. Instead, we use so-called micro-average and macro-average of both precision and recall, and then make their mean average for micro-averaged and macro-averaged F-score. We use $\mu$ as short for micro and $M$ as short for macro.
 
-Micro- and macro-averaged precision and recall is defined as \todofn{citace \url{http://datamin.ubbcluj.ro/wiki/index.php/Evaluation_methods_in_text_categorization}} 
+Micro- and macro-averaged precision and recall is defined as \footnote{From Data Mining wiki  \url{http://datamin.ubbcluj.ro/wiki/index.php/Evaluation_methods_in_text_categorization}, Babes-Bolyai University, Romania} 
 
 $$P_{\mathrm{\mu}} = \frac{\sum_{i=1}^{|C|}TP_{i}}{\sum_{i=1}^{|C|}TP_{i}+FP_{i}}; \quad R_{\mathrm{\mu}} = \frac{\sum_{i=1}^{|C|}TP_{i}}{\sum_{i=1}^{|C|}TP_{i}+FN_{i}}$$
 
 $$P_{\mathrm{M}}=\frac{1}{|C|}\sum_{i=1}^{|C|}\frac{TP_{i}}{TP_{i}+FP_{i}};\quad R_{\mathrm{M}}=\frac{1}{|C|}\sum_{i=1}^{|C|}\frac{TP_{i}}{TP_{i}+FN_{i}}$$
 
-where $TP_i$ is true positive given a category $i$. Basically, micro-averaging gives equal weights to every document, while macro-averaging gives equal weights to every category\todofn{opět citace \url{http://datamin.ubbcluj.ro/wiki/index.php/Evaluation_methods_in_text_categorization}}.
+where $TP_i$ is true positive given a category $i$ and $C$ is the set of categories. Basically, micro-averaging gives equal weights to every document, while macro-averaging gives equal weights to every category.
 
 \section{Results}
 All the results are rounded to two significant digits.
@@ -429,12 +430,12 @@ For comparison, we began with two ``baseline'' algorithms - first was random cla
  \hline
  & $P_\mu$ & $R_\mu$ & $F_\mu$ & $P_M$ & $R_M$  & $F_M$ \\ \hline
 Rand. class. & 0.11 & 0.51 & 0.19 & 0.11 & 0.57 & 0.18 \\ \hline
-Rand. feas. & 0.30 & 0.36 & 0.32 & 0.10 & 0.14 & 0.12 \\ \hline
+Rand. feats. & 0.30 & 0.36 & 0.32 & 0.10 & 0.14 & 0.12 \\ \hline
 \end{tabular}
 %\end{table}
 
 \subsubsection{Morphological features}
-When we take the features as described in the section \todofn{reference}, we got these results:
+When we take the features as described above, we got these results:
 
 
 \begin{tabular}{|r|r|r|r|r|r|r|}
@@ -508,8 +509,8 @@ so the algorithms don't become too slow and the feature space too big.)
 \hline
 lets.&feats & $P_\mu$ & $R_\mu$ & $F_\mu$ & $P_M$ & $R_M$  & $F_M$ \\ \hline
 1 & 138 & 0.22 & 0.47 & 0.30 & 0.20 & 0.43 & 0.29 \\ \hline
-1, 2  & 917 & 0.25 & 0.54 & 0.35 & 0.22 & 0.48 & 0.30 \\ \hline
-1, 2, 3  & ?1700? & 0.26 & 0.54 & 0.35 & 0.23 & 0.48 & 0.31 \\ \hline
+1, 2  & 901 & 0.25 & 0.54 & 0.35 & 0.22 & 0.48 & 0.30 \\ \hline
+1, 2, 3  & 1659 & 0.26 & 0.54 & 0.35 & 0.23 & 0.48 & 0.31 \\ \hline
 
 \end{tabular}
 \caption{Combination context and endings}
