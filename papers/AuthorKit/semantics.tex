@@ -171,7 +171,7 @@ LE2KAR3==MZ(@(*H),!,MA0111,VRAC2).
 
 From this format we have extracted the Czech side of the dictionary together with the semantic categories. 
 When we took the categories without ``sanity checking'' and filtering out the possible mistakes, 
-we ended up with 2,783 words and 29 categories; however, some of these categories appear only with one or two words, therefore they are not relevant for our purpose. When we filtere out those categories, that don't appear in at least 30 words, we ended up with the fetures described in Table 1.
+we ended up with 2,783 words and 29 categories; however, some of these categories appear only with one or two words, therefore they are not relevant for our purpose. When we filtere out those categories, that don't appear in at least 30 words, we ended up with the features described in Table 1.
 
 \begin{table}
 \begin{tabular}{|l|l|l|}
@@ -284,9 +284,9 @@ and that they probably won't see the context no matter how big corpus we take. W
 The success of machine learning algorithms to great extent depends on the 
 %One of the major decisions for us was 
 choice of proper 
-features
+features.
 % for the machine learning
-. In our experiments we have tried to exploit two types of features 
+In our experiments we have tried to exploit two types of features 
 %The features we used in our work are
 %of two types 
 - context ones and morphological ones. 
@@ -304,23 +304,15 @@ from a context, but only adjectives were taken into account.
 We have decided to use all parts of speech as a context in our experiment. This decision was motivated by the endeavor to use as much information from the context as possible. 
 
 \todofn{Pokusil jsem se to prepsat, ale nevim, jestli jsem to spravne pochopil VK}
-We have taken into account the context of two words to the left and two words to the right 
-First of all, it was necessary to determine the context of all ''known'' words from the dictionary, i.e. the words whose semantic categories we know.  
-%We tried to count the words, appearing on the position 1 and 2 words left and 
-%right from the words, and use the counts as a feature type. 
-%For example, assuming we have
-%a sentence chunk with a word from training data with a semantic category [animated]:'the \textbf{visitor}[anim] looked'.
-%The statistics of the corpus shows that it is very probable to meet the animated noun in this context.
-%Our assumption was that a noun on the left from '\textit{looked}' is highly probable to have a category [anim].
-%Let us describe it in more detail for, for example, \todofn{To je divne napsane} position 1 left. 
+We have taken into account the context of two words to the left and two words to the right. 
+First of all, it was necessary to determine the context of all ``known'' words from the dictionary, i.e. the words whose semantic categories we know.  
+
 For every word from the lexicon, we 
-have looked at all words in its context
-%, appearing left from them. 
-If $n$ words are found, then it actually means that we have obtained $n$ separate 
+have looked at all words in its context.
+
+If $n$ types are found, then it actually means that we have obtained $n$ separate 
 features for that particular word, where the value of each feature represents 
-the number of times when the feature word appeared in the context
-% would be the word count
-.
+the number of times when the feature word appeared in the context.
  
 The machine learning model is, then, trained on these features. To assign a category
 to an unseen word, we have to go through the entire corpus, count
