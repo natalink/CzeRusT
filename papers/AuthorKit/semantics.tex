@@ -424,29 +424,31 @@ All the results are rounded to two significant digits.
 
 For comparison, we began with two ``baseline'' algorithms - first was random classifier, that didn't look at the features at all; the second was logistic regression model, but learned on randomly generated 200 columns of random ``features''.
 
-% v resultech - první micro, potom macr
-%\begin{table}
+% v resultech - první micro, potom macro
+\begin{table}[h]
 \begin{tabular}{|r|r|r|r|r|r|r|}
  \hline
  & $P_\mu$ & $R_\mu$ & $F_\mu$ & $P_M$ & $R_M$  & $F_M$ \\ \hline
 Rand. class. & 0.11 & 0.51 & 0.19 & 0.11 & 0.57 & 0.18 \\ \hline
 Rand. feats. & 0.30 & 0.36 & 0.32 & 0.10 & 0.14 & 0.12 \\ \hline
 \end{tabular}
-%\end{table}
+\end{table}
 
 \subsubsection{Morphological features}
 When we take the features as described above, we got these results:
 
-
+\begin{table}[h]
 \begin{tabular}{|r|r|r|r|r|r|r|}
  \hline
  & $P_\mu$ & $R_\mu$ & $F_\mu$ & $P_M$ & $R_M$  & $F_M$ \\ \hline
 Morphology & 0.57 & 0.66 & 0.61 & 0.46 & 0.41 & 0.43 \\ \hline
 \end{tabular}
 
+\end{table}
+
 If we break it into individual classifiers, we got these results
 
-
+%\begin{table}[h]
 \begin{tabular}{|r|r|}
 \hline
 A & 0.57 \\ \hline
@@ -463,27 +465,32 @@ A & 0.57 \\ \hline
     D & 0.40 \\ \hline
 
 \end{tabular}
+%\end{table}
 
 You can see that we got a 0 F-score with several categories. This unfortunately happens, because there is very little examples for those categories in the \emph{testing} data and they all got misaligned.
 
 \subsubsection{Context}
 If we take as a context feature 1 word on the left and 1 word on the right, and $min$ set as 40, we have 980 features. With those, results are as follows:
 
+\begin{table}[h]
 
 \begin{tabular}{|r|r|r|r|r|r|r|}
  \hline
  & $P_\mu$ & $R_\mu$ & $F_\mu$ & $P_M$ & $R_M$  & $F_M$ \\ \hline
 Dist. 1 & 0.27 & 0.57 & 0.36 & 0.23 & 0.48 & 0.30 \\ \hline
 \end{tabular}
+\end{table}
 
 
 If we take words with distance 2 (with $min$ still 40), we got 1,501 features. The results are as follows:
 
+\begin{table}[h]
 \begin{tabular}{|r|r|r|r|r|r|r|}
  \hline
  & $P_\mu$ & $R_\mu$ & $F_\mu$ & $P_M$ & $R_M$  & $F_M$ \\ \hline
 Dist. 2 & 0.28 & 0.62 & 0.39 & 0.23 & 0.49 & 0.32 \\ \hline
 \end{tabular}
+\end{table}
 
 We can see that the results are not that much better.
 
@@ -502,19 +509,20 @@ Those numbers are quite arbitrarily chosen to keep the feature space relatively 
 so the algorithms don't become too slow and the feature space too big.)
 
 %\todo{najít ??}
-\begin{table}
+\begin{table}[h]
 
 
 \begin{tabular}{|r|r|r|r|r|r|r|r|}
 \hline
-lets.&feats & $P_\mu$ & $R_\mu$ & $F_\mu$ & $P_M$ & $R_M$  & $F_M$ \\ \hline
+letters&feats & $P_\mu$ & $R_\mu$ & $F_\mu$ & $P_M$ & $R_M$  & $F_M$ \\ \hline
 1 & 138 & 0.22 & 0.47 & 0.30 & 0.20 & 0.43 & 0.29 \\ \hline
 1, 2  & 901 & 0.25 & 0.54 & 0.35 & 0.22 & 0.48 & 0.30 \\ \hline
 1, 2, 3  & 1659 & 0.26 & 0.54 & 0.35 & 0.23 & 0.48 & 0.31 \\ \hline
 
 \end{tabular}
-\caption{Combination context and endings}
+%\caption{Combination context and endings}
 \end{table}
+
 As you can see, with the added 3rd letter, we are not getting much better and 
 the feature space is growing, making our algorithm slower. We are also still worse than with the context alone.
 
