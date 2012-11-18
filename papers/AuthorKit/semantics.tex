@@ -28,8 +28,8 @@
 \maketitle
 \begin{abstract}
 In this paper we explore supervised machine learning techniques for
-assigning semantic categories to nouns. We operate with 16 semantic categories 
-relevant especially for the task of words sense disambiguation. The training
+assigning semantic categories to nouns in Czech. We operate with 16 semantic categories 
+relevant especially for the task of Word Sense Disambiguation. The training
 data presents a set of 2,783 nouns with assigned semantic categories.   
 The central problem of this research is to find the features for the machine learning 
 that produce better results in the face of a small trainig data size. 
@@ -49,8 +49,7 @@ interlinked by semantic relations and organized hierarchically into
 semantic classes. It nowadays exists for many languages including Czech. Although it is a large scale resource providing complex semantic information, it's applicability is often limited by the fact that it was created by means of a translation of the English WordNet and that it uses a system of categories which may not fit a particular application.
 
 Many additional tools for automatic semantic annotation have been created so far, as, e.g., 
-for clustering\todofn{really clustering?} words into semantic classes(e.g., \cite{baroni:2009} -- - for German and Italian) or for 
-semantic relation assignment \cite{peirsman} etc.  
+for semantic relation assignment \cite{peirsman} or multipurpose semantic memory (\cite{baroni:2009}) etc.  
  
 %Assigning semantic features to words category assignment belongs to one 
 %or classification of words into semantic fields
@@ -58,23 +57,11 @@ semantic relation assignment \cite{peirsman} etc.
 %word sense disambiguation or question-answering.
 
 In this paper we describe experiments with automatic assignment of semantic features (categories) to Czech nouns
-exploiting an existing resource (a small hand-annotated lexicon created originally for a machine translation system). The assignment is performed carried by means of logistic regression models. The model is trained in a supervised manner, using 
+exploiting an existing resource (a small hand-annotated lexicon created originally for a machine translation system).
+The assignment is performed by means of logistic regression models. The model is trained in a supervised manner, using 
 %using a small training set of nouns that are annotated with semantic categories. 
 %We are excperimenting with 
-basically two kinds of features for machine learning --  morphological and syntactic (context behaviour) properties and their combination. The experiments give an answer to a question which type of features is more useful for the given purpose.   
-
-
-%As features of machine learning 
-%\footnote{Initially, in this context of a Machine Learning the notion 'feature' is used, but we will use 'atribute' instead so that it does not interfere with 'semantic feature' concept}.
-%we have chosen both 
-%The work has been carried out for Czech language.
-
-%Recently many tools for automatic semantic annotation have been created, like
-%clustering \todofn{really clustering?} words into semantic classes(\cite{baroni:2009} - for German and Italian), 
-%semantic relation assignment \cite{peirsman}. The most well-known resource
-%in the field WordNet \cite{wordnet} presents the lexicon of words
-%interlinked by semantic relations and organized hierarchically into 
-%semantic classes. 
+basically two kinds of features for machine learning --  morphological(endings) and syntactic (context behaviour) properties and their combination. The experiments give an answer to a question which type of features is more useful for the given purpose.   
 
 \subsection{Note on notation}
 Since the word ``feature'' is frequently used both in linguistic context as a term for semantic category and in 
@@ -117,7 +104,9 @@ It can also help to disambiguate different senses of verbs:\\
 (2) \textit{The program runs on Linux.} -[+computer] category of a subject \\
 %The latter verb is translated into Czech with the same verb \textit{be(et}
 for both senses, so this concrete ambiguity is not relevant for
-the translation between English and Czech. On the other hand, If translated into Russian, the verb needs to be translated differently in different contexts: while the verb in (1) will can be translated straightforwardly as \textit{be\v{z}a\v{t}} into Russian,
+the translation between English and Czech. On the other hand, 
+If translated into Russian, the verb needs to be translated differently in different contexts: 
+while the verb in (1) will can be translated straightforwardly as \textit{be\v{z}a\v{t}} into Russian,
 the metaphorical meaning in (2) must be expressed by another verb -- \textit{rabota\v{t}} - to work.
 %More examples on how the semantic categories work will be presented in the next section
 %after the lexicon description. \todofn{Will it?}
@@ -195,7 +184,8 @@ D & 32 & action \\ \hline
 \end{table}
 
 
-The total number of categories assigned to words is bigger than the number of words because some words have more than one semantic category. In average, each words is assigned 1.4 categories.
+The total number of categories assigned to words is bigger than the number of words because 
+some words have more than one semantic category. In average, each words is assigned 1.4 categories.
 
 
 %\subsubsection{Semantic categories and their role in Ruslan}
@@ -231,7 +221,8 @@ The total number of categories assigned to words is bigger than the number of wo
 %'Such a situation could not happen'
 
 %\subsubsection{Semantic features - negative experience}
-Before we'll introduce additional sources of data, let us make a short remark concerning the role of semantic features in the original system. The main reason why they were introduced was the endeavor to reduce the ambiguity of translation (the system tended to slightly overgenerate the results) and to disallow sentences which would not be semantically plausible. The practical experience from testing clearly showed that using the features for restriction of certain is not a good idea, they tended to be too restrictive and actually blocked the translation more often than they helped to resolve the ambiguity.
+Before we'll introduce additional sources of data, let us make a short remark concerning the role of semantic features in the original system. 
+The main reason why they were introduced was the endeavor to reduce the ambiguity of translation (the system tended to slightly overgenerate the results) and to disallow sentences which would not be semantically plausible. The practical experience from testing clearly showed that using the features for restriction of certain is not a good idea, they tended to be too restrictive and actually blocked the translation more often than they helped to resolve the ambiguity.
 %As it was stated in \cite{KubonPHD2001} the semantic features did not
 %served the purpose of disambiguation, sometimes they introduced mistakes
 %so that translation process failed to produce a result at all. This
@@ -242,7 +233,9 @@ Before we'll introduce additional sources of data, let us make a short remark co
 %statistics.
 
 \subsection{Monolingual data corpus}
-Because one of our methods was supposed to exploit an immediate context, it was necessary to use additional annotated corpora. As the highest quality annotation of Czech is provided in the Prague Dependency Treebank (PDT),\footnote{\url{http://ufal.mff.cuni.cz/pdt2.0/}}, it was a natural choice.   
+Because one of our methods was supposed to exploit an immediate context, it was necessary to use additional annotated 
+corpora. As the highest quality annotation of Czech is provided in the Prague Dependency 
+Treebank (PDT),\footnote{\url{http://ufal.mff.cuni.cz/pdt2.0/}}, it was a natural choice.   
 % data sourcea context, we As one of our features, we decided to use the context informations, taken from a monolingual corpus.
 
 
@@ -297,11 +290,15 @@ As J. R. Firth stated ``Words shall be known by the company they keep'',
 therefore our first idea (and the whole reason of using a large mono-lingual corpus in the first place) 
 was to look at the context in which the words appear and to try to convert it to machine learning features.
 
-The context can in principle be exploited in a number of different ways. For example, in \cite{baroni:2009}, the authors use a method of automatic clustering,  
-where semantic relations have been retrieved from context. 
+The context can in principle be exploited in a number of different ways. For example, 
+in \cite{baroni:2009}, the authors proposed a scheme to retrieve
+various semantic properties of words from the context.
+%use a method of automatic clustering,  
+%where semantic relations have been retrieved from context. 
 In \cite{biemann05} the semantic features of nouns were learned
 from a context, but only adjectives were taken into account.
-We have decided to use all parts of speech as a context in our experiment. This decision was motivated by the endeavor to use as much information from the context as possible. 
+We have decided to use all parts of speech as a context in our experiment. This decision was motivated by the 
+endeavor to use as much information from the context as possible. 
 
 \todofn{Pokusil jsem se to prepsat, ale nevim, jestli jsem to spravne pochopil VK}
 We have taken into account the context of two words to the left and two words to the right. 
@@ -451,23 +448,29 @@ If we break it into individual classifiers, we got these results
 %\begin{table}[h]
 \begin{tabular}{|r|r|}
 \hline
-A & 0.57 \\ \hline
-    C & 0.75 \\ \hline
-    R & 0.66 \\ \hline
-    K & 0.58 \\ \hline
-    V & 0.78 \\ \hline
-    H & 0.57 \\ \hline
-    Z & 0.11 \\ \hline
-    M & 0.18 \\ \hline
-    P & 0 \\ \hline
-    N & 0 \\ \hline
-    F & 0 \\ \hline
-    D & 0.40 \\ \hline
+abstract & 0.57 \\ \hline
+activity & 0.75 \\ \hline
+result & 0.66 \\ \hline
+concrete & 0.58 \\ \hline
+property & 0.78 \\ \hline
+animated & 0.57 \\ \hline
+machinery & 0.11 \\ \hline
+measure & 0.18 \\ \hline
+program & 0 \\ \hline
+instrument & 0 \\ \hline
+function & 0 \\ \hline
+action & 0.40 \\ \hline
 
 \end{tabular}
 %\end{table}
 
-You can see that we got a 0 F-score with several categories. This unfortunately happens, because there is very little examples for those categories in the \emph{testing} data and they all got misaligned.
+From this table it is evident, that the classifiers for individual categories have very different scores. 
+We got a 0 F-score with several categories, %This unfortunately happens, 
+because there is very little examples for those categories in 
+the \emph{testing} data and they all got misaligned. As for the other categories,
+they more or less represent how the surface form of a word is connected to its semantics (activity or property
+scored the best).
+
 
 \subsubsection{Context}
 If we take as a context feature 1 word on the left and 1 word on the right, and $min$ set as 40, we have 980 features. With those, results are as follows:
