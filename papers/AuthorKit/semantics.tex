@@ -24,7 +24,7 @@
 %
 
 \title{Experiments in maching learning for automatic semantic feature assignment}
-\author{Author 1, Author 2, Author 3}
+%\author{Karel B\'{i}lek, Natalia Klyueva, Vladislav Kubo\v{n}}
 \maketitle
 \begin{abstract}
 In this paper we explore supervised machine learning techniques for
@@ -57,11 +57,23 @@ for semantic relation assignment \cite{peirsman} or multipurpose semantic memory
 %word sense disambiguation or question-answering.
 
 In this paper we describe experiments with automatic assignment of semantic features (categories) to Czech nouns
-exploiting an existing resource (a small hand-annotated lexicon created originally for a machine translation system).
-The assignment is performed by means of logistic regression models. The model is trained in a supervised manner, using 
+exploiting an existing resource (a small hand-annotated lexicon created originally for a machine translation system). The assignment is performed carried by means of logistic regression models. The model is trained in a supervised manner, using 
 %using a small training set of nouns that are annotated with semantic categories. 
 %We are excperimenting with 
-basically two kinds of features for machine learning --  morphological (endings) and syntactic (context behaviour) properties and their combination. The experiments give an answer to a question which type of features is more useful for the given purpose.   
+basically two kinds of features for machine learning --  morphological and syntactic (context behaviour) properties and their combination. The experiments give an answer to a question which type of features is more useful for the given purpose.   
+
+
+%As features of machine learning 
+%\footnote{Initially, in this context of a Machine Learning the notion 'feature' is used, but we will use 'atribute' instead so that it does not interfere with 'semantic feature' concept}.
+%we have chosen both 
+%The work has been carried out for Czech language.
+
+%Recently many tools for automatic semantic annotation have been created, like
+%clustering \todofn{really clustering?} words into semantic classes(\cite{baroni:2009} - for German and Italian), 
+%semantic relation assignment \cite{peirsman}. The most well-known resource
+%in the field WordNet \cite{wordnet} presents the lexicon of words
+%interlinked by semantic relations and organized hierarchically into 
+%semantic classes. 
 
 \subsection{Note on notation}
 Since the word ``feature'' is frequently used both in linguistic context as a term for semantic category and in 
@@ -80,7 +92,7 @@ There is no generally accepted set of semantic features, as researches
 usually use their own classification depending on their goals. Assigning 
 semantic features to concrete words is influenced by a general issue 
 of finding the proper level of granularity - if the number of semantic features is relatively 
-low, they are not rich enough to capture more subtle differences in the word meaning;
+low, they are not rich enough to capture more subtle differences in the woird meaning;
 if too many of them are used, it is more difficult to assign them correctly
 for each particular word. This is probably one of the reasons why the 
 number of distinct semantic features varies in various experiments 
@@ -94,7 +106,7 @@ In \cite{principled_disam} the authors show the way to disambiguate adjectives
 with the help of semantic categories of nouns they modify. 
 
 For example, it may help 
-to discriminate two senses of the  adjective \textit{short}
+to discriminate two senses of the adjective \textit{short}
 : applied to those nouns with the sem. category [+human] versus in combination
 with a [+interval] noun. The phrase \textit{a short girl} is translated
 into Czech as \textit{mal\'{a} holka}, whereas \textit{a short day} is \textit{kr\'{a}tk\'{y} den}.
@@ -102,11 +114,8 @@ into Czech as \textit{mal\'{a} holka}, whereas \textit{a short day} is \textit{k
 It can also help to disambiguate different senses of verbs:\\ 
 (1)\textit{The dog runs after the owner.} - [+human] category of a subject\\
 (2) \textit{The program runs on Linux.} -[+computer] category of a subject \\
-The verb 'to run' is translated into Czech with the same verb \textit{be(et}
-for both senses, so this concrete ambiguity is not relevant for
-the translation between English and Czech.  
-If translated for example from English or Czech into Russian, the disambiguation is needed: 
-while the verb in (1) will can be translated straightforwardly as \textit{be\v{z}a\v{t}} - 'to run' into Russian,
+If translated for example from English or Czech into Russian, the disambiguation is needed:
+while the verb in (1) can be translated straightforwardly as \textit{be\v{z}a\v{t}} - 'to run' into Russian,
 the metaphorical meaning in (2) must be expressed by another verb -- \textit{rabota\v{t}} - 'to work'.
 %More examples on how the semantic categories work will be presented in the next section
 %after the lexicon description. \todofn{Will it?}
@@ -121,7 +130,7 @@ More specifically, in most of the algorithms, the training data can be broken in
 \textit{examples}, and each of the examples can be described as a set of \textit{features} and a given \textit{category}. The machine learning algorithm is usually a model with variable parameters, which are then learned from the training data.
 
 With the data we have at our disposal, we can take the semantically annotated words from the lexicon as training examples 
-and some of their linguistic properties as features in machine learning.
+and their linguistic properties as features in machine learning.
 
 
 \section{Sources}
@@ -185,8 +194,7 @@ D & 32 & action \\ \hline
 \end{table}
 
 
-The total number of categories assigned to words is bigger than the number of words because 
-some words have more than one semantic category. In average, each words is assigned 1.4 categories.
+The total number of categories assigned to words is bigger than the number of words because some words have more than one semantic category. In average, each words is assigned 1.4 categories.
 
 
 %\subsubsection{Semantic categories and their role in Ruslan}
@@ -222,8 +230,7 @@ some words have more than one semantic category. In average, each words is assig
 %'Such a situation could not happen'
 
 %\subsubsection{Semantic features - negative experience}
-Before we'll introduce additional sources of data, let us make a short remark concerning the role of semantic features in the original system. 
-The main reason why they were introduced was the endeavor to reduce the ambiguity of translation (the system tended to slightly overgenerate the results) and to disallow sentences which would not be semantically plausible. The practical experience from testing clearly showed that using the features for restriction of certain is not a good idea, they tended to be too restrictive and actually blocked the translation more often than they helped to resolve the ambiguity.
+Before we'll introduce additional sources of data, let us make a short remark concerning the role of semantic features in the original system. The main reason why they were introduced was the endeavor to reduce the ambiguity of translation (the system tended to slightly overgenerate the results) and to disallow sentences which would not be semantically plausible. The practical experience from testing clearly showed that using the features for restriction of certain is not a good idea, they tended to be too restrictive and actually blocked the translation more often than they helped to resolve the ambiguity.
 %As it was stated in \cite{KubonPHD2001} the semantic features did not
 %served the purpose of disambiguation, sometimes they introduced mistakes
 %so that translation process failed to produce a result at all. This
@@ -234,9 +241,7 @@ The main reason why they were introduced was the endeavor to reduce the ambiguit
 %statistics.
 
 \subsection{Monolingual data corpus}
-Because one of our methods was supposed to exploit an immediate context, it was necessary to use additional annotated 
-corpora. As the highest quality annotation of Czech is provided in the Prague Dependency 
-Treebank (PDT),\footnote{\url{http://ufal.mff.cuni.cz/pdt2.0/}}, it was a natural choice.   
+Because one of our methods was supposed to exploit an immediate context, it was necessary to use additional annotated corpora. As the highest quality annotation of Czech is provided in the Prague Dependency Treebank (PDT),\footnote{\url{http://ufal.mff.cuni.cz/pdt2.0/}}, it was a natural choice.   
 % data sourcea context, we As one of our features, we decided to use the context informations, taken from a monolingual corpus.
 
 
@@ -254,7 +259,7 @@ The 115,844 sentences of PDT contain 1,957,247 tokens, but out of the 2,783 word
 
 These numbers clearly indicate that the contextual information based on manually annotated data from RUSLAN is too sparse for machine learning. In would actually mean that many feature vectors would be empty 
 %for about half of the examples in the test 
-%set, 
+%set,
 which would cause 
 %half of the 
 many examples to be misaligned completely.
@@ -291,17 +296,16 @@ As J. R. Firth stated ``Words shall be known by the company they keep'',
 therefore our first idea (and the whole reason of using a large mono-lingual corpus in the first place) 
 was to look at the context in which the words appear and to try to convert it to machine learning features.
 
-The context can in principle be exploited in a number of different ways. For example, 
+The context can in principle be exploited in a number of different ways. For example,
 in \cite{baroni:2009}, the authors proposed a scheme to retrieve
 various semantic properties of words from the context.
-%use a method of automatic clustering,  
-%where semantic relations have been retrieved from context. 
+%use a method of automatic clustering,
+%where semantic relations have been retrieved from context.
 In \cite{biemann05} the semantic features of nouns were learned
 from a context, but only adjectives were taken into account.
-We have decided to use all parts of speech as a context in our experiment. This decision was motivated by the 
-endeavor to use as much information from the context as possible. 
+We have decided to use all parts of speech as a context in our experiment. This decision was motivated by the endeavor to use as much information from the context as possible. 
 
-\todofn{Pokusil jsem se to prepsat, ale nevim, jestli jsem to spravne pochopil VK}
+%\todofn{Pokusil jsem se to prepsat, ale nevim, jestli jsem to spravne pochopil VK}
 We have taken into account the context of two words to the left and two words to the right. 
 First of all, it was necessary to determine the context of all ``known'' words from the dictionary, i.e. the words whose semantic categories we know.  
 
@@ -338,50 +342,79 @@ We ignore the values when the integer value is smaller than 1 (that means, if it
 If we set $min$ as 40, the number of features is 1,502.
 
 \subsection{Morphology}
-As you will see further, experiments with context were not that successful. 
-We then tried to experiment with a morphology, altough we initially saw it as just a ``baseline'' model.
+The second approach we have decided to try was based upon morpho-semantic properties of nouns.
+The main idea of this experiment was based upon the investigation carried out by Z.Kirschner in his system MOSAIC \cite{kirschner1983}. He exploited the fact that many suffixes in natural languages determine the semantic nature of words. For example, in English, the suffixes {\it -or} or {\it -er} usually appear with words having a semantic role of an actor of some activity, {\it -tion} is an activity, {\it -ity} or {\it -ness} marks a property. In Czech,  {\it -i\v{c}}, {\it -a\v{c}}, {\it -\v{c}ka}, {\it -\'{e}r}, {\it -or}, {\it -dlo}, {\it -metr}, {\it -graf}, {\it -fon}, {\it -skop} are tools or machines, {\it -ace}, {\it -kce}, {\it -\'{a}\v{z}}, {\it -n\'{i}}, {\it -za} processes or activities,
+{\it -ost}, {\it -ita}, {\it -nce} properties; and adjectives ending with {\it -an\'{y}}, {\it -en\'{y}} are results of processes while {\it -ac\'{i}}, {\it -ec\'{i}} marks a purpose.
 
-Because in Czech language, the ending can often determine the semantic category, 
-we decided to try adding endings as a machine learning feature. 
-More exactly, for $n=$ 4,3,2 and even 1, we took the last $n$ letters from 
-a word and we then created new feature for every such ending and set is as 1.
+There were two major reasons why we could not apply the method from MOSAIC directly. First, the sementic categories determined by Czech suffixes do not directly correspond to the set of semantic categories we are using in our experiments; and, second, the number of suffixes seems to be too large (\cite{kirschner1983} says that a full coverage of Czech technical texts would require about 2000 suffixes) and contain too many exceptions (for each domain it is necessary to create a dictionary of hand-picked exceptions, words, which have the particular suffix, but which do not belong to a semantic category usually marked by the suffix).     
+  
+In order to avoid the long and costly process of manual selection of relevant suffixes, we have decided to rely on data and  
+%We then tried to experiment with a morphology, altough we initially saw it as just a ``baseline'' model.
+%Because in Czech language, the ending can often determine the semantic category, 
+to try adding suffixes as a machine learning feature.  
+More exactly, we took the last $n$ letters from 
+a word (for $n=$ 4,3,2 and even 1) and we then created a new feature for every such suffix. 
+%with a valand set is as 1.
 
-It actually means that the feature vector for any training example will be mostly zeroes 
+It actually resulted in the feature vector for any training example consisting mostly of zeroes 
 (it will be 1 only for one ending of length 4, only 1 for ending of length 3, and so on, 
-and the rest will be 0). On the other hand, it is much easier to find such feature 
-for a new word, because you just look at the word itself and you don't need to dig through the dictionary.
+and the rest will be 0). On the other hand, the advantage of such brute-force approach is obvious - 
+it is much easier to find such feature 
+for a new word, because it is fully determined by the word itself and it is not necessary to dig into the dictionary.
 
-As with the previous features, the number quickly explodes. We repeat the first measure 
-to stop feature explosion - we use only those endings as features that have at least $min$ words in the lexicon ending with these endings.
+Also the morphological features have the property that their number quickly explodes, therefore it was necessary to apply the same measures to stop feature explosion - we use only those suffixes that appear at least $min$-times in the dictionary.
 
 If we put $min$ as 5, the number of features is 433.
 
-\subsection{Combination}
-We also tried to combine the two approaches.
+\subsection{Suffixes and a semantic category}
+%It is a known fact, that
+%In (Kirchner?) it was stated, that 
+The identification of relevant suffixes is not sufficient,
+as a second step it is also necessary to link the suffixes with relevant semantic categories. 
+%One of the linguistically valuable side-effects of our research can be 
+%the set of endings of words that are most likely to belong to the
+%respective semantic category.
+%The form of a word can to some extent signalize the semantic class of it. 
+%For example, 'er' or 'ee' denote [+human, profession] semantic category of a word.
+Below are the examples of the endings that
+can indicate the semantic features of words according to our experiments.
 
-Aside from just putting all the features together, we tried to include the morphology of the context. 
-That means - we tried to add features as ``the count of the combinations of last 3 letters of the words 2 on the right'', and so on.
+\begin{table}[!h]
+\begin{tabular}{ll}
+\hline
+A abstract & \textit{ivost, ekce, ování, íra, ita, nictví}\\
+H animated & \textit{átor, ovník, atel, atelka, stník, or, ík}\\
+C activity & \textit{ení, ování, ání, ace}\\
+D action  & \textit{ení, ání, ace}\\
+R result & \textit{ ita, ení, utí, ání, akce, utí}\\
+K concrete & \textit{ka, íč, énko, ora}\\
+M measure/unit & \textit{etnost, ita, ví, o, kost, etí}\\
+V property & \textit{ita, nost, ce}\\
+\hline
+\end{tabular}
+\caption{Sem.categories and the endings they take most frequently}
+\end{table}
 
-The results were disappointing, though, as will be described further. 
-We think this is because the feature space becomes unrealistically big and the so-called Curse of Dimensionality starts to take place.\footnote{This is sometimes known as ``Hughes effect'', see \cite{hughes:1968}} Basically, we get huge matrix with more features than training examples, but most of the matrix is empty.
 
-We tried some simple algorithms for feature reduction, but we didn't get very far with those.
+
 
 \section{Machine Learning appropaches}
 \subsection{Logistic Regression}
-For our first approach, we got heavily inspired by the Andrew Ng Machine Learning MOOC  on Coursera.org.
+%For our first approach, we got heavily inspired by the Andrew Ng Machine Learning MOOC  on Coursera.org.
 
-\todofn{Mělo tu celá tato kapitola být? Kdo chce, může si o tom zjistit něco víc. Naopak já jsem tam určitě nasekal spoustu chyb.}Let's suppose that the feature vector is called $y$ and the category, that we want to predict, is called $x$.
+%\todofn{Mělo tu celá tato kapitola být? Kdo chce, může si o tom zjistit něco víc. Naopak já jsem tam určitě nasekal spoustu chyb.}Let's suppose that the feature vector is called $y$ and the category, that we want to predict, is called $x$.
 
-In binary logistic regression model with \emph{one category} (meaning - the classifier just predicts 0 or 1), the classifier learns a vector $\theta$, which is as long as the input feature vector. The vector $\theta$ is then multiplied with the feature vector $y$, which gives us value $z$. We then take the value $z$ and apply the so-called sigmoid function or logistic function ($\frac{1}{1+e^{-z}}$), which then gives us a number $h_\theta(x)$. That number is chance that the example \textbf{is} in a given category. We can then output 1 if the chance is higher than some number $\gamma$ (usually 0.5).
+%In binary logistic regression model with \emph{one category} (meaning - the classifier just predicts 0 or 1), the classifier learns a vector $\theta$, which is as long as the input feature vector. The vector $\theta$ is then multiplied with the feature vector $y$, which gives us value $z$. We then take the value $z$ and apply the so-called sigmoid function or logistic function ($\frac{1}{1+e^{-z}}$), which then gives us a number $h_\theta(x)$. That number is chance that the example \textbf{is} in a given category. We can then output 1 if the chance is higher than some number $\gamma$ (usually 0.5).
 
-The vector $\theta$ is learned using the so-called \emph{gradient descent}. Gradient descent defines so-called cost function for a given theta and one given example with category $y$ (1 or 0) as $-y \log(h_\theta(x))-(1-y)-\log(1-h_\theta(x))$ and average cost function over all the training examples as $J(\theta)$. We then try to find $\min_\theta J(\theta)$ by initializing $\theta$ as some random vector and then periodically updating $\theta:=\theta'$, where $\theta'_i=\theta_i-\alpha\frac{\partial}{\partial \theta_j}J(\theta)-\frac{\lambda}{m}\theta_j$ with a pre-set $\alpha$, count of training examples $m$ and so-called regularization factor $\lambda$.
+%The vector $\theta$ is learned using the so-called \emph{gradient descent}. Gradient descent defines so-called cost function for a given theta and one given example with category $y$ (1 or 0) as $-y \log(h_\theta(x))-(1-y)-\log(1-h_\theta(x))$ and average cost function over all the training examples as $J(\theta)$. We then try to find $\min_\theta J(\theta)$ by initializing $\theta$ as some random vector and then periodically updating $\theta:=\theta'$, where $\theta'_i=\theta_i-\alpha\frac{\partial}{\partial \theta_j}J(\theta)-\frac{\lambda}{m}\theta_j$ with a pre-set $\alpha$, count of training examples $m$ and so-called regularization factor $\lambda$.
+The most suitable tool for our experiments seems to be the logistic regression. It can predict to which category a particular unseen word belongs. If we have several binary classifiers, it is recommended to use \emph{one-vs-all} models, with the category with the biggest chance ``winning''. However, this model is only applicable to the case where we have \textbf{\emph{single category}} with every training case. 
+In our case, though, we have multiple categories and their assignment is therefore not so straightforward.
+%(also called multiple labels in literature). 
 
-If we have several binary classifiers, Ng recommends using \emph{one-vs-all} models, with the category with the biggest chance ``winning''. However, this model is only applicable to the case where we have \textbf{\emph{single category}} with every training case. 
-In our case, though, we have multiple categories (also called multiple labels in literature). 
-
-We employed a simple solution, where every category has its own classifier trained separately, returning 1 or 0, indicated 
-belonging or not belonhing to the category. The item is then indicated as belonging to all the categories where it returned 1.
+In order to solve this problem, we have employed a simple solution, where every category has its own classifier trained separately, returning 1 or 0 and thus indicating whether a particular input word belongs to this category or not.
+%, indicated 
+%belonging or not belonhing to the category. 
+The item is then indicated as belonging to all the categories where the classifier returned 1.
 
 For every experiment, we put aside the same (at the beginning randomly selected) set for testing purposes. 
 On the training set, we put aside a heldout set, and we train the parameters $\lambda$ and $\gamma$ on the heldout set, simply by training the model with the given $\lambda$ and $\gamma$, counting the F-score and getting the best $\lambda$ and $\gamma$ for the given classifier.
@@ -416,7 +449,9 @@ $$P_{\mathrm{M}}=\frac{1}{|C|}\sum_{i=1}^{|C|}\frac{TP_{i}}{TP_{i}+FP_{i}};\quad
 where $TP_i$ is true positive given a category $i$ and $C$ is the set of categories. Basically, micro-averaging gives equal weights to every document, while macro-averaging gives equal weights to every category.
 
 \section{Results}
-All the results are rounded to two significant digits.
+First of all, let us present the results achieved for the baseline experiment and for both experiments using the above described sets of features. 
+All results are rounded to two significant digits.
+
 \subsection{Logistic regression}
 \subsubsection{Random baseline}
 
@@ -432,8 +467,33 @@ Rand. feats. & 0.30 & 0.36 & 0.32 & 0.10 & 0.14 & 0.12 \\ \hline
 \end{tabular}
 \end{table}
 
+
+\subsubsection{Context}
+In order to find out whether the context based method provides enough information for semantic classification, we have not tested all possibilities (various length of the context, different threshold value $min$ etc.). In the first experiment we have taken only 1 word on the left and 1 word on the right as a context feature, and we have set $min$ to 40. This gave us 980 features. With those, the results are as follows:
+
+\begin{table}[h]
+
+\begin{tabular}{|r|r|r|r|r|r|r|}
+ \hline
+ & $P_\mu$ & $R_\mu$ & $F_\mu$ & $P_M$ & $R_M$  & $F_M$ \\ \hline
+Dist. 1 & 0.27 & 0.57 & 0.36 & 0.23 & 0.48 & 0.30 \\ \hline
+\end{tabular}
+\end{table}
+
+The second experiment extended the context to words with distance 2 both to the left and to the right (with $min$ still 40). This increased the number of features only slightly, to 1,501. The results were unfortunatelly not much better, thus indicating that further extension of the context is most probably irrelevant:
+
+\begin{table}[h]
+\begin{tabular}{|r|r|r|r|r|r|r|}
+ \hline
+ & $P_\mu$ & $R_\mu$ & $F_\mu$ & $P_M$ & $R_M$  & $F_M$ \\ \hline
+Dist. 2 & 0.28 & 0.62 & 0.39 & 0.23 & 0.49 & 0.32 \\ \hline
+\end{tabular}
+\end{table}
+
+
+
 \subsubsection{Morphological features}
-When we take the features as described above, we got these results:
+As the next step, we have tested the logistic regression with morphological features obtained in the way described above. The results are quite encouraging compared to the experiments with the context, they constitute a substantial improvement:
 
 \begin{table}[h]
 \begin{tabular}{|r|r|r|r|r|r|r|}
@@ -444,7 +504,8 @@ Morphology & 0.57 & 0.66 & 0.61 & 0.46 & 0.41 & 0.43 \\ \hline
 
 \end{table}
 
-If we break it into individual classifiers, we got these results
+If we break the results into individual classifiers, we can see that for several categories it is quite successful with relatively high F-score, thus indicating that certain suffixes related to some categories are really quite productive and that the assumption that they carry the meaning of the word is probably right. On the other hand, 0 F-score with several categories represents a complete failure of the mechanism. It happened due to a very small number of examples for those categories in the \emph{testing} data, and due to the fact that they all got misaligned. This result might also indicate that the set of semantic categories was itself only partially well-chosen. Some categories are too seldom in order to be taken into account, certain redefinition might be useful for future experiments. The exact results are presented below: 
+
 
 %\begin{table}[h]
 \begin{tabular}{|r|r|}
@@ -460,59 +521,27 @@ measure & 0.18 \\ \hline
 program & 0 \\ \hline
 instrument & 0 \\ \hline
 function & 0 \\ \hline
-action & 0.40 \\ \hline
+action & 0.40 \\ \hline 
 
 \end{tabular}
 %\end{table}
 
-From this table it is evident, that the classifiers for individual categories have very different scores. 
-We got a 0 F-score with several categories, %This unfortunately happens, 
-because there is very little examples for those categories in 
-the \emph{testing} data and they all got misaligned. As for the other categories,
-they more or less represent how the surface form of a word is connected to its semantics (activity or property
-scored the best).
 
-
-\subsubsection{Context}
-If we take as a context feature 1 word on the left and 1 word on the right, and $min$ set as 40, we have 980 features. With those, results are as follows:
-
-\begin{table}[h]
-
-\begin{tabular}{|r|r|r|r|r|r|r|}
- \hline
- & $P_\mu$ & $R_\mu$ & $F_\mu$ & $P_M$ & $R_M$  & $F_M$ \\ \hline
-Dist. 1 & 0.27 & 0.57 & 0.36 & 0.23 & 0.48 & 0.30 \\ \hline
-\end{tabular}
-\end{table}
-
-
-If we take words with distance 2 (with $min$ still 40), we got 1,501 features. The results are as follows:
-
-\begin{table}[h]
-\begin{tabular}{|r|r|r|r|r|r|r|}
- \hline
- & $P_\mu$ & $R_\mu$ & $F_\mu$ & $P_M$ & $R_M$  & $F_M$ \\ \hline
-Dist. 2 & 0.28 & 0.62 & 0.39 & 0.23 & 0.49 & 0.32 \\ \hline
-\end{tabular}
-\end{table}
-
-We can see that the results are not that much better.
-
-\subsubsection{Combination - endings and beginnigs of context words}
-What we can do now is add the ``combination'' of morphology and context - that is, 
-we can try to add endings and beginnings of the words on the left and on the right.
+\subsection{Combination of approaches}
+The encouraging results of the morphological classifier led to the third experiment. The main question of this experiment was whether the context can add some information to the suffixes.
+We have tested two possible ways how to combine context and morphology. The first one was a bit more sophisticated, we tried to include the morphology of the context. 
+That means - we tried to add features as ``the count of the combinations of last 3 letters of the words 2 on the right'', and so on.
 
 We originally wanted to let the $min$ value 40 to keep the experiments ``consistent'',
 but the feature space exploded quickly. So, as a way of a very primitive feature cutting,
-we increased the $min$ value for the features where we take more letters.
+we increased the $min$ value for those features where we take more letters into account.
 
-If we take the endings and beginnings of context words with the distances 1, we have these results:
-
+The endings and beginnings of context words with the distances 1 gave us these results:
 (We took $min$ as 40 for the lengths 1, 80 for the length 2 and 140 for the length 3. 
-Those numbers are quite arbitrarily chosen to keep the feature space relatively small, 
-so the algorithms don't become too slow and the feature space too big.)
+Those numbers were quite arbitrarily chosen to keep the feature space relatively small, 
+so the algorithm doesn't become too slow and the feature space too big.)
 
-%\todo{najít ??}
+
 \begin{table}[h]
 
 
@@ -527,23 +556,46 @@ letters&feats & $P_\mu$ & $R_\mu$ & $F_\mu$ & $P_M$ & $R_M$  & $F_M$ \\ \hline
 %\caption{Combination context and endings}
 \end{table}
 
-As you can see, with the added 3rd letter, we are not getting much better and 
-the feature space is growing, making our algorithm slower. We are also still worse than with the context alone.
+With the added 3rd letter, the F-scores are almost the same as for less complicated combinations while the feature space has grown substantially, making our algorithm slower. The worst aspect is, however, that the results are actually even worse than the results for the context alone.
 
-
-We can wonder if the reason, why the context is not working as 
-well as we would want, is that the feature space is simply too big. 
-However, even with reducted space, we never got better results from this `
-`combined'' way than from pure context; that means, that all we can get out of context 
+We can only wonder whether the reason why the context is not working as expected, is that the feature space becomes unrealistically big and the so-called Curse of Dimensionality starts to take place.\footnote{This is sometimes known as ``Hughes effect'', see \cite{hughes:1968}} Basically, we get a huge matrix with more features than training examples, but the matrix is very sparse.
+ 
+However, even after a substantial reduction of the space in subsequent experiments, we were never able to get better results from this `
+`combined'' approach than from pure context. This means that all we can get out of context 
 is best done by looking at the context alone, not at its endings or beginnings.
 
-\subsubsection{Combination - putting features together}
-We thought that with combined feature from context and morphology, the approaches would complement 
-themselves and the results would get better, than either of them (especially morphology).
 
-However, this didn't turn out to be true - the results are very slightly worse, than with morphology alone, 
-further underlining the fact that the morphology of the words, at least in our case and with our technique, 
-is more useful than context.
+%We tried some simple algorithms for feature reduction, but we didn't get very far with those.
+
+
+
+% - that is, 
+%whether we can try to add endings and beginnings of the words on the left and on the right.
+
+
+
+
+
+
+
+
+
+%\todo{najít ??}
+
+%\subsection{Combination}
+%We also tried to combine the two approaches.
+
+
+
+\subsubsection{Combination - putting features together}
+The second type of combination is actually more primitive than the first one. It simply takes both types of features and puts them together. 
+%We have thought that with combined features from context and morphology, the approaches would complement 
+%themselves and the results would get better, than either of them (especially morphology).
+However, neither this simple combination provided better results than morphology alone, 
+%this didn't turn out to be true - the results are very slightly worse, than with morphology alone, 
+further underlining the fact that the morphology of the words, 
+%at least in our case and with our technique, 
+seems to be more useful than context.
 
 \begin{tabular}{|r|r|r|r|r|r|r|}
  \hline
@@ -552,55 +604,30 @@ Combined & 0.54 & 0.70 & 0.61 & 0.33 & 0.42 & 0.37 \\ \hline
 \end{tabular}
 
 
-\subsection{Suffixes and a semantic category}
-%It is a known fact, that
-%In (Kirchner?) it was stated, that 
-One of the linguistically valuable side-effects of our research can be 
-the set of endings of words that are most likely to belong to the
-respective semantic category.
-The form of a word can to some extent signalize the semantic class of it. 
-For example, 'er' or 'ee' denote [+human, profession] semantic category of a word.
-Below are the examples of the endings that
-can indicate the semantic features of words according to our experiments.
-
-\begin{table}[!h]
-\begin{tabular}{ll}
-\hline
-A abstract & \textit{ivost, ekce, ování, íra, ita, nictví}\\
-H animated & \textit{átor, ovník, atel, atelka, stník, or, ík}\\
-C activity & \textit{ení, ování, ání, ace}\\
-D action  & \textit{ení, ání, ace}\\
-R result & \textit{ ita, ení, utí, ání, akce, utí}\\
-K concrete & \textit{ka, íč, énko, ora}\\
-M measure/unit & \textit{etnost, ita, ví, o, kost, etí}\\
-V property & \textit{ita, nost, ce}\\
-\hline
-\end{tabular}
-\caption{Sem.categories and the endings they take most frequently}
-\end{table}
-
 
 \section{Conclusion}
-In this paper we described machine learning algorithms
-created to guess the semantic category of a noun based on the following features:\\
-1.Context surroundings of a word\\
-2.Morphological characteristics of a word\\
-We have shown, that for this concrete task the context properties of a word
-does not appear to be promising at least in such a simple manner we
-used(regarding context as a word after and a word before) .
-Probably, more non-trivial context features should be taken into account
-- such as ex. part-of-speech tag.
-On the other hand, such simple method as guessing semantic features on the
+In this paper we have described the experiments in applying machine machine learning algorithms
+to guessing the semantic category of nouns based on the following features:\\
+1. A (limited) context surrounding a word  \\
+2. Morphological characteristics of a word, namely its suffix\\
+
+We have shown that the context properties of a word
+provide less information than the suffixes, both alone and in combination with morphology. 
+%does not appear to be promising at least in such a simple manner we
+%used(regarding context as a word after and a word before) .
+Even a very simple method of guessing semantic features on the
 basis of the surface form of the word brought more favorable %positive?promising?
 results in terms of precision. It was also an interesting observation, that
 adding context features to that morphological to the machine learning
 negatively influenced the overall quality.
 
-The possible future directions of our work will lie both in the field of
-optimizing features for the Machine Learning algorithm as well as
-adapting WordNet as training and test data for our task.
+There are several possible directions for further research. One lies in the field of
+optimization of features for Machine Learning algorithm, the second one might explore 
+adapting WordNet as training and test data for our task. The third one points towards
+designing non-trivial context features taking into account part-of-speech tags and other information.
 
-\bibliographystyle{aaai} \bibliography{biblio}
+
+\bibliographystyle{aaai} \bibliography{Biblio}
 
 
 \end{document}
