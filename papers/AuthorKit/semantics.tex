@@ -14,7 +14,7 @@
 \usepackage{url}
 \frenchspacing
 \pdfinfo{
-/Title (Experiments in maching learning for automatic semantic feature assignment) %
+/Title (Exploiting maching learning for automatic semantic feature assignment) %
 /Subject (AAAI Publications)
 /Author (AAAI Press)}
 \setcounter{secnumdepth}{0}  
@@ -23,7 +23,7 @@
 % proceedings, working notes, and technical reports.
 %
 
-\title{Experiments in maching learning for automatic semantic feature assignment}
+\title{Exploiting maching learning for automatic semantic feature assignment}
 %\author{Karel B\'{i}lek, Natalia Klyueva, Vladislav Kubo\v{n}}
 \maketitle
 \begin{abstract}
@@ -32,7 +32,7 @@ assigning semantic categories to nouns in Czech. We operate with 16 semantic cat
 relevant especially for the task of Word Sense Disambiguation. The training
 data presents a set of 2,783 nouns with assigned semantic categories.   
 The central problem of this research is to find the features for the machine learning 
-that produce better results in the face of a small trainig data size. 
+that produce better results in the face of a small training data size. 
 We exploited the context of a word which is a generally used technique for this task, 
 and we also tried the morphological segments as features.
 
@@ -121,7 +121,7 @@ the metaphorical meaning in (2) must be expressed by another verb -- \textit{rab
 %after the lexicon description. \todofn{Will it?}
 
 \subsection{Classification}
-The task of semantic category assignment can be naturaly represented as a task of classication, using supervised machine learning algorithms.
+The task of semantic category assignment can be naturally represented as a task of classification, using supervised machine learning algorithms.
 
 Generally, in supervised machine learning, we have a set of training data with defined 
 categories and we want to build an algorithm, which will generalize from this training data and return a category for any yet unseen data.
@@ -135,7 +135,7 @@ and their linguistic properties as features in machine learning.
 
 \section{Sources}
 \subsection{Semantic categories}
-The neccessary condition for the success of any supervised machine learning algorithm are reliable training data. Instead of creating a new set of semantic categories and subsequently undertaking a long and costly process of manual annotation, we have decided to re-use existing high quality manually annotated data. Such data exist in the form of a bilingual dictionary of a machine translation system RUSLAN, a rule based MT system translating from Czech to Russian.
+The necessary condition for the success of any supervised machine learning algorithm are reliable training data. Instead of creating a new set of semantic categories and subsequently undertaking a long and costly process of manual annotation, we have decided to re-use existing high quality manually annotated data. Such data exist in the form of a bilingual dictionary of a machine translation system RUSLAN, a rule based MT system translating from Czech to Russian.
 
 The history of RUSLAN \cite{oliva1989parser} goes back to the second half of the 80's when there was a need for an automatic translation of operating systems manuals. The project was abandoned in 90's when
 there was no need for the MT between Czech and Russian. Since then, the resources used in the project served mainly as a source of data for other projects, for
@@ -169,7 +169,8 @@ LE2KAR3==MZ(@(*H),!,MA0111,VRAC2).
 
 From this format we have extracted the Czech side of the dictionary together with the semantic categories. 
 When we took the categories without ``sanity checking'' and filtering out the possible mistakes, 
-we ended up with 2,783 words and 29 categories; however, some of these categories appear only with one or two words, therefore they are not relevant for our purpose. When we filtere out those categories, that don't appear in at least 30 words, we ended up with the features described in Table 1.
+we ended up with 2,783 words and 29 categories; however, some of these categories appear only with one or two words, 
+therefore they are not relevant for our purpose. When we filter out those categories, that don't appear in at least 30 words, we ended up with the features described in Table 1.
 
 \begin{table}
 \begin{tabular}{|l|l|l|}
@@ -318,19 +319,19 @@ the number of times when the feature word appeared in the context.
  
 The machine learning model is, then, trained on these features. To assign a category
 to an unseen word, we have to go through the entire corpus, count
-the features for the unsees word as well using the same algorithm as for the features of the known words. However, this time we are not collecting all words appearing in the left or right context of the unseen word, but only those appearing among the features collecting for known words (in other words, we count all the words in the context and then perform an 
+the features for the unseen word as well using the same algorithm as for the features of the known words. However, this time we are not collecting all words appearing in the left or right context of the unseen word, but only those appearing among the features collecting for known words (in other words, we count all the words in the context and then perform an 
 intersection of the counted words and the words from the features). Again, the number obtained for each feature is a value of that feature for the unseen word and becomes a part of the feature vector of the machine learning model.
 
-This naive approach has several drawbacks. Most importantly, our number of features explodes, while the values (number of appearences) themselves are very unevenly distributed.
+This naive approach has several drawbacks. Most importantly, our number of features explodes, while the values (number of appearances) themselves are very unevenly distributed.
 
 For this reason we made several corrections:
 \begin{itemize}
     \item we nominate a word from context as a feature only when the given context word was seen in at least some fixed number of training examples $min$ - it is not going to help us too much 
-if only few known words have this partticular word as a context (a ``training example'' here means a word from the lexicon)
+if only few known words have this particular word as a context (a ``training example'' here means a word from the lexicon)
     
     \item we normalize the numbers, so that the features are all about 
 the same size. We originally wanted to use percents as values - meaning, 
-we wouldn't have the number of appearences as a feature, but the percentage of how often is a given word in the context of the training example.    
+we wouldn't have the number of appearances as a feature, but the percentage of how often is a given word in the context of the training example.    
      However, this resulted in very small numbers, since actually, 
 in most of the training examples, even the top context features are in the order of 
 tenths of percents; so, at the end we use integer value percent times ten. 
@@ -346,7 +347,7 @@ The second approach we have decided to try was based upon morpho-semantic proper
 The main idea of this experiment was based upon the investigation carried out by Z.Kirschner in his system MOSAIC \cite{kirschner1983}. He exploited the fact that many suffixes in natural languages determine the semantic nature of words. For example, in English, the suffixes {\it -or} or {\it -er} usually appear with words having a semantic role of an actor of some activity, {\it -tion} is an activity, {\it -ity} or {\it -ness} marks a property. In Czech,  {\it -i\v{c}}, {\it -a\v{c}}, {\it -\v{c}ka}, {\it -\'{e}r}, {\it -or}, {\it -dlo}, {\it -metr}, {\it -graf}, {\it -fon}, {\it -skop} are tools or machines, {\it -ace}, {\it -kce}, {\it -\'{a}\v{z}}, {\it -n\'{i}}, {\it -za} processes or activities,
 {\it -ost}, {\it -ita}, {\it -nce} properties; and adjectives ending with {\it -an\'{y}}, {\it -en\'{y}} are results of processes while {\it -ac\'{i}}, {\it -ec\'{i}} marks a purpose.
 
-There were two major reasons why we could not apply the method from MOSAIC directly. First, the sementic categories determined by Czech suffixes do not directly correspond to the set of semantic categories we are using in our experiments; and, second, the number of suffixes seems to be too large (\cite{kirschner1983} says that a full coverage of Czech technical texts would require about 2000 suffixes) and contain too many exceptions (for each domain it is necessary to create a dictionary of hand-picked exceptions, words, which have the particular suffix, but which do not belong to a semantic category usually marked by the suffix).     
+There were two major reasons why we could not apply the method from MOSAIC directly. First, the semantic categories determined by Czech suffixes do not directly correspond to the set of semantic categories we are using in our experiments; and, second, the number of suffixes seems to be too large (\cite{kirschner1983} says that a full coverage of Czech technical texts would require about 2000 suffixes) and contain too many exceptions (for each domain it is necessary to create a dictionary of hand-picked exceptions, words, which have the particular suffix, but which do not belong to a semantic category usually marked by the suffix).     
   
 In order to avoid the long and costly process of manual selection of relevant suffixes, we have decided to rely on data and  
 %We then tried to experiment with a morphology, altough we initially saw it as just a ``baseline'' model.
@@ -480,7 +481,8 @@ Dist. 1 & 0.27 & 0.57 & 0.36 & 0.23 & 0.48 & 0.30 \\ \hline
 \end{tabular}
 \end{table}
 
-The second experiment extended the context to words with distance 2 both to the left and to the right (with $min$ still 40). This increased the number of features only slightly, to 1,501. The results were unfortunatelly not much better, thus indicating that further extension of the context is most probably irrelevant:
+The second experiment extended the context to words with distance 2 both to the left and to the right 
+(with $min$ still 40). This increased the number of features only slightly, to 1,501. The results were unfortunately not much better, thus indicating that further extension of the context is most probably irrelevant:
 
 \begin{table}[h]
 \begin{tabular}{|r|r|r|r|r|r|r|}
