@@ -24,7 +24,7 @@
 %
 
 \title{Experiments in maching learning for automatic semantic feature assignment}
-\author{Karel Bilek, Natalija Kljueva}
+\author{Author 1, Author 2, Author 3}
 \maketitle
 \begin{abstract}
 In this paper we explore supervised machine learning techniques for
@@ -44,12 +44,12 @@ and we also tried the morphological segments as features.
 Lexicons enhanced with semantic information are frequently used 
 in various NLP applications, such as machine translation, question-answering
 or sentiment analysis. Probably the most well known resource of such kind is 
-WordNet (\cite{wordnet}), the lexicon of words
+WordNet \cite{wordnet}, the lexicon of words
 interlinked by semantic relations and organized hierarchically into 
 semantic classes. It nowadays exists for many languages including Czech. Although it is a large scale resource providing complex semantic information, it's applicability is often limited by the fact that it was created by means of a translation of the English WordNet and that it uses a system of categories which may not fit a particular application.
 
 Many additional tools for automatic semantic annotation have been created so far, as, e.g., 
-for semantic relation assignment \cite{peirsman} or multipurpose semantic memory (\cite{baroni:2009}) etc.  
+for semantic relation assignment \cite{peirsman} or multipurpose semantic memory \cite{baroni:2009} etc.  
  
 %Assigning semantic features to words category assignment belongs to one 
 %or classification of words into semantic fields
@@ -61,7 +61,7 @@ exploiting an existing resource (a small hand-annotated lexicon created original
 The assignment is performed by means of logistic regression models. The model is trained in a supervised manner, using 
 %using a small training set of nouns that are annotated with semantic categories. 
 %We are excperimenting with 
-basically two kinds of features for machine learning --  morphological(endings) and syntactic (context behaviour) properties and their combination. The experiments give an answer to a question which type of features is more useful for the given purpose.   
+basically two kinds of features for machine learning --  morphological (endings) and syntactic (context behaviour) properties and their combination. The experiments give an answer to a question which type of features is more useful for the given purpose.   
 
 \subsection{Note on notation}
 Since the word ``feature'' is frequently used both in linguistic context as a term for semantic category and in 
@@ -80,7 +80,7 @@ There is no generally accepted set of semantic features, as researches
 usually use their own classification depending on their goals. Assigning 
 semantic features to concrete words is influenced by a general issue 
 of finding the proper level of granularity - if the number of semantic features is relatively 
-low, they are not rich enough to capture more subtle differences in the woird meaning;
+low, they are not rich enough to capture more subtle differences in the word meaning;
 if too many of them are used, it is more difficult to assign them correctly
 for each particular word. This is probably one of the reasons why the 
 number of distinct semantic features varies in various experiments 
@@ -94,7 +94,7 @@ In \cite{principled_disam} the authors show the way to disambiguate adjectives
 with the help of semantic categories of nouns they modify. 
 
 For example, it may help 
-to discriminates two senses of the  adjective \textit{short}
+to discriminate two senses of the  adjective \textit{short}
 : applied to those nouns with the sem. category [+human] versus in combination
 with a [+interval] noun. The phrase \textit{a short girl} is translated
 into Czech as \textit{mal\'{a} holka}, whereas \textit{a short day} is \textit{kr\'{a}tk\'{y} den}.
@@ -102,12 +102,12 @@ into Czech as \textit{mal\'{a} holka}, whereas \textit{a short day} is \textit{k
 It can also help to disambiguate different senses of verbs:\\ 
 (1)\textit{The dog runs after the owner.} - [+human] category of a subject\\
 (2) \textit{The program runs on Linux.} -[+computer] category of a subject \\
-%The latter verb is translated into Czech with the same verb \textit{be(et}
+The verb 'to run' is translated into Czech with the same verb \textit{be(et}
 for both senses, so this concrete ambiguity is not relevant for
-the translation between English and Czech. On the other hand, 
-If translated into Russian, the verb needs to be translated differently in different contexts: 
-while the verb in (1) will can be translated straightforwardly as \textit{be\v{z}a\v{t}} into Russian,
-the metaphorical meaning in (2) must be expressed by another verb -- \textit{rabota\v{t}} - to work.
+the translation between English and Czech.  
+If translated for example from English or Czech into Russian, the disambiguation is needed: 
+while the verb in (1) will can be translated straightforwardly as \textit{be\v{z}a\v{t}} - 'to run' into Russian,
+the metaphorical meaning in (2) must be expressed by another verb -- \textit{rabota\v{t}} - 'to work'.
 %More examples on how the semantic categories work will be presented in the next section
 %after the lexicon description. \todofn{Will it?}
 
@@ -121,7 +121,7 @@ More specifically, in most of the algorithms, the training data can be broken in
 \textit{examples}, and each of the examples can be described as a set of \textit{features} and a given \textit{category}. The machine learning algorithm is usually a model with variable parameters, which are then learned from the training data.
 
 With the data we have at our disposal, we can take the semantically annotated words from the lexicon as training examples 
-and their linguistic categories as features in machine learning.
+and some of their linguistic properties as features in machine learning.
 
 
 \section{Sources}
@@ -166,6 +166,7 @@ we ended up with 2,783 words and 29 categories; however, some of these categorie
 \begin{tabular}{|l|l|l|}
  \hline
 \textbf{Shortcut} &  \textbf{Count} & \textbf{Category}\\
+\hline
 A & 941 & abstract \\ \hline
 C & 835 & activity \\ \hline
 R & 728 & result \\ \hline
